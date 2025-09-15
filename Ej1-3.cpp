@@ -11,7 +11,6 @@ public:
             }
         }
     } 
-
     friend Matriz operator+ (Matriz lm, const Matriz& rm){
         for(int i = 0; i < N; i++){
             for(int j = 0; j < N; j++){
@@ -21,15 +20,51 @@ public:
 
         return lm;
     }
+    friend Matriz operator- (Matriz lm, const Matriz& rm){
+        for(int i = 0; i < N; i++){
+            for(int j = 0; j < N; j++){
+                lm.datos[i][j] -= rm.datos[i][j];
+            }
+        }
+
+        return lm;
+    }
+
+
+    friend Matriz operator* (const Matriz& lm, const Matriz& rm){
+        int res[N][N] = {{0,0,0},{0,0,0},{0,0,0}};
+
+        for(int i = 0; i < N; i++){
+            for(int j = 0; j < N; j++){
+                for(int k = 0; k < N; k++){
+                    res[i][j] += lm.datos[i][k] * rm.datos[k][j];
+                }
+            }
+        }
+
+        Matriz result(res);
+        return result;
+    }
 
     friend std::ostream& operator<< (std::ostream& os, const Matriz& m){
         for(int i = 0; i < N; i++){
             for(int j = 0; j < N; j++){
-                os << m.datos[i][j];
+                os << m.datos[i][j] << " ";
             }
+            os << std::endl;
         }
 
         return os;
+    }
+
+    Matriz& Traspuesta(){
+        for(int i = 0; i < N; i++)
+            for(int j = i; j < N; j++){
+                int temp = datos[i][j];
+                datos[i][j] = datos[j][i];
+                datos[j][i] = temp;
+            }
+        return *this;
     }
 
 private:
@@ -40,13 +75,17 @@ private:
 
 
 int main(){
-    int datos1[N][N] = { {1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
-    int datos2[N][N] = { {3, 2, 1}, {6, 4, 5}, {9, 7, 8}};
+
+    int datos1[N][N] = { {1, 2, 0}, 
+                         {0, 1, 0}, 
+                         {0, 0, 1}};
+
+    int datos2[N][N] = { {1, 0, 0}, 
+                         {1, 2, 0}, 
+                         {2, 3, 3}};
 
     Matriz m1(datos1);
     Matriz m2(datos2);
 
-    Matriz m3 = m1 + m2;
-
-    std::cout << m3;
+    std::cout << m2.Traspuesta();
 }
