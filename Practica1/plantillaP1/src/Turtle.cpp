@@ -14,7 +14,6 @@ Turtle::Turtle(Game* game, Texture* texture, std::istream& is)
 	: m_pGame(game), m_pTexture(texture), m_fnextFrameTimer(ANIM_PER), m_nCurrFrame(0)
 {
 	float x, y, vX;
-	int type;
 	is >> x >> y >> vX;
 	m_Pos.setX(x); m_Pos.setY(y);
 	m_Vel.setX(vX);
@@ -48,10 +47,10 @@ void Turtle::update()
 
 Collision Turtle::checkCollision(const SDL_FRect& other) const
 {
-	int width = m_pTexture->getFrameWidth();
-	int height = m_pTexture->getFrameHeight();
-	int x = int(m_Pos.getX());
-	int y = int(m_Pos.getY());
+    float width = (float)m_pTexture->getFrameWidth();
+    float height = (float)m_pTexture->getFrameHeight();
+    float x = (float)m_Pos.getX();
+    float y = (float)m_Pos.getY();
 
 	SDL_FRect rect = { x, y, width, height };
 

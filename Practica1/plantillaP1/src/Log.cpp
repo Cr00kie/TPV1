@@ -37,10 +37,10 @@ void Log::update() {
 }
 
 Collision Log::checkCollision(const SDL_FRect& other) const {
-	int width = m_pTexture->getFrameWidth();
-	int height = m_pTexture->getFrameHeight();
-	int x = int(m_Pos.getX());
-	int y = int(m_Pos.getY());
+    float width = (float)m_pTexture->getFrameWidth();
+    float height = (float)m_pTexture->getFrameHeight();
+    float x = (float)m_Pos.getX();
+    float y = (float)m_Pos.getY();
 
 	SDL_FRect rect = { x, y, width, height };
 

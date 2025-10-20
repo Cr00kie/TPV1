@@ -8,7 +8,7 @@ InfoBar::InfoBar(Game* g, Texture* t, Vector2D<int> pos) : m_pGame(g), m_pTextur
 
 void InfoBar::render(int vidas)
 {
-	SDL_FRect target = { m_Pos.getX(), m_Pos.getY(), m_pTexture->getFrameWidth(), m_pTexture->getFrameHeight()};
+	SDL_FRect target = { (float)m_Pos.getX(), (float)m_Pos.getY(), (float)m_pTexture->getFrameWidth(), (float)m_pTexture->getFrameHeight()};
 	
 	for(int i = 0; i < vidas; ++i) 
 	{

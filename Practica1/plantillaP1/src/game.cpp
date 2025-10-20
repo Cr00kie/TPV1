@@ -128,7 +128,7 @@ Game::update()
 			Vector2D<float>(PRIMER_NIDO_X + getRandomHomeIndex() * DIST_NIDOS, PRIMER_NIDO_Y),
 			Vector2D<float>(0, 0),
 			float(getRandomRange(MIN_WASP_ALIVE, MAX_WASP_ALIVE))));
-		timeNextWasp = getRandomRange(MAX_WASP_ALIVE+MIN_WASP_DEAD, MAX_WASP_ALIVE+MAX_WASP_DEAD);
+		timeNextWasp = (float)getRandomRange(MAX_WASP_ALIVE+MIN_WASP_DEAD, MAX_WASP_ALIVE+MAX_WASP_DEAD);
 	}
 	timeNextWasp -= DELTA;
 
@@ -190,7 +190,7 @@ Game::run()
 		render();
 
 		//TODO - Medir bien el tiempo y no parar si no hace falta
-		SDL_Delay(DELTA*1000);
+		SDL_Delay((int)DELTA*1000);
 	}
 }
 

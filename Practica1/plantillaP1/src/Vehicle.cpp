@@ -32,7 +32,7 @@ void Vehicle::update() {
 	if (m_Pos.getX() < m_pGame->BAST_IZQ)
 		m_Pos.setX(m_pGame->WINDOW_WIDTH);
 	else if (m_Pos.getX() > m_pGame->WINDOW_WIDTH + m_pGame->BAST_DER)
-		m_Pos.setX(-m_pTexture->getFrameWidth());
+		m_Pos.setX(-(float)m_pTexture->getFrameWidth());
 }
 
 Collision Vehicle::checkCollision(const SDL_FRect& other) const {

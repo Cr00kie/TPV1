@@ -9,7 +9,7 @@ class Game;
 class Frog {
 private:
 	static constexpr int STEP = 32;
-	static constexpr float ANIM_DURATION = 0.08;
+	static constexpr float ANIM_DURATION = 0.08f;
 	static constexpr int DEFAULT_MAX_HEALTH = 3;
 	static constexpr int COLLIDER_REDUCTION = 10;
 	Game* m_pGame;
