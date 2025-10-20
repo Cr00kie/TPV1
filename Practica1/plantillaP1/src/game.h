@@ -13,6 +13,7 @@
 #include "Wasp.h"
 #include "Collision.h"
 #include "InfoBar.h"
+#include "Turtle.h"
 
 // Declaraciones anticipadas
 class Texture;
@@ -22,6 +23,7 @@ class Log;
 class Vehicle;
 class Wasp;
 class InfoBar;
+class Turtle;
 struct Collision;
 
 /**
@@ -98,6 +100,7 @@ private:
 	std::vector<Log*> logs;
 	std::vector<HomedFrog*> homedFrogs;
 	std::vector<Wasp*> wasps;
+	std::vector<Turtle*> turtles;
 	float timeNextWasp;
 
 	InfoBar* infoBar;

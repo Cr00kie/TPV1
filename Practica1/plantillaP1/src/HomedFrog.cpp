@@ -23,7 +23,7 @@ Collision HomedFrog::checkCollision(const SDL_FRect& other) const {
 
 	if (SDL_HasRectIntersectionFloat(&rect, &other))
 	{
-		ret.type = ret.ENEMY;
+		ret.type = m_bIsActive ? ret.ENEMY : ret.HOME;
 	}
 	else {
 		ret.type = ret.NONE;

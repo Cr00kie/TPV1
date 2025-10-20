@@ -6,6 +6,7 @@ struct Collision {
 		NONE,
 		ENEMY,
 		PLATFORM,
+		HOME,
 	};
 	Type type;
 	Vector2D<float> vel;

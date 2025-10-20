@@ -5,6 +5,7 @@
 #include <SDL3_image/SDL_image.h>
 
 #include "texture.h"
+
 #include <fstream>
 
 using namespace std;
@@ -89,6 +90,7 @@ Game::~Game()
 	for (Log* l : logs) delete l;
 	for (HomedFrog* f : homedFrogs) delete f;
 	for (Wasp* w : wasps) delete w;
+	for (Turtle* t : turtles) delete t;
 
 	delete infoBar;
 
@@ -107,6 +109,7 @@ Game::render() const
 	for (Log* l : logs) l->render();
 	for (HomedFrog* f : homedFrogs) f->render();
 	for (Wasp* w : wasps) w->render();
+	for (Turtle* t : turtles) t->render();
 
 	frog->render();
 
@@ -134,6 +137,7 @@ Game::update()
 
 	for (Vehicle* v : vehicles) v->update();
 	for (Log* l : logs) l->update();
+	for (Turtle* t : turtles) t->update();
 	for (int i = 0; i < wasps.size(); ) {
 		wasps[i]->update();
 		if (!wasps[i]->isAlive())
@@ -165,6 +169,9 @@ void Game::handleCollisions()
 		break;
 	case Collision::PLATFORM:
 		frog->setVelocity(colData.vel);
+		break;
+	case Collision::HOME:
+		frog->resetPos();
 		break;
 	case Collision::NONE:
 		// Si cae al agua muere
@@ -253,13 +260,9 @@ Game::checkCollision(const SDL_FRect& rect) const
 		colData = f->checkCollision(rect);
 		if (colData.type != colData.NONE) 
 		{
-			// Quitamos el type para no hacer daño la primera vez que llega al nido y activamos el nido
+			// Si el nido no se ha activado, lo activamos
 			if(!f->IsActive())
-			{
 				f->SetActive();
-				frog->resetPos();
-				colData.type = colData.NONE;
-			}
 			return colData;
 		}
 	}
@@ -267,6 +270,12 @@ Game::checkCollision(const SDL_FRect& rect) const
 	for (Log* l : logs)
 	{
 		colData = l->checkCollision(rect);
+		if (colData.type != colData.NONE) return colData;
+	}
+
+	for (Turtle* t : turtles)
+	{
+		colData = t->checkCollision(rect);
 		if (colData.type != colData.NONE) return colData;
 	}
 
@@ -294,6 +303,8 @@ void Game::loadMap()
 			case 'L':
 				logs.push_back(new Log(this, textures[LOG1], file));
 				break;
+			case 'T':
+				turtles.push_back(new Turtle(this, textures[TURTLE], file));
 			case '#':
 				break;
 			default:
