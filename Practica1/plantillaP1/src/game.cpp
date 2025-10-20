@@ -190,7 +190,7 @@ Game::run()
 		render();
 
 		//TODO - Medir bien el tiempo y no parar si no hace falta
-		SDL_Delay((int)DELTA*1000);
+        SDL_Delay((int)(DELTA * 1000.f));
 	}
 }
 
