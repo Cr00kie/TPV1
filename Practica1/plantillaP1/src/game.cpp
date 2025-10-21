@@ -7,6 +7,7 @@
 #include "texture.h"
 
 #include <fstream>
+#include <limits>
 
 using namespace std;
 
@@ -190,7 +191,7 @@ Game::run()
 		render();
 
 		//TODO - Medir bien el tiempo y no parar si no hace falta
-        SDL_Delay((int)(DELTA * 1000.f));
+        SDL_Delay((int)(DELTA_MS));
 	}
 }
 
@@ -311,7 +312,7 @@ void Game::loadMap()
 				throw "Error: Identificador de objeto invalido '"s + id + "' en la linea "s + std::to_string(l);
 			}
 			if (file.fail()) throw "Error: no se ha podido leer el objeto '"s + id + "' en la linea "s + std::to_string(l);
-			file.ignore(500000, '\n');
+			file.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 			file.get(id);
 			l++;
 		}

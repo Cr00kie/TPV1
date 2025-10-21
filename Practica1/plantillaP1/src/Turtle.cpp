@@ -24,7 +24,7 @@ Turtle::Turtle(Game* game, Texture* texture, std::istream& is)
 void Turtle::render() const
 {
 	SDL_FRect pos = { m_Pos.getX(), m_Pos.getY(), float(m_pTexture->getFrameWidth()), float(m_pTexture->getFrameHeight()) };
-	m_pTexture->renderFrame(pos, 0, m_nCurrFrame);
+	m_pTexture->renderFrame(pos, 0, m_nCurrFrame, SDL_FLIP_HORIZONTAL);
 }
 
 void Turtle::update()

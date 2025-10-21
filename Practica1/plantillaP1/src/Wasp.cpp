@@ -34,7 +34,7 @@ Collision Wasp::checkCollision(const SDL_FRect& other) const {
 	return ret;
 }
 
-bool Wasp::isAlive()
+bool Wasp::isAlive() const
 {
 	return m_nTiempoVida > 0;
 }
