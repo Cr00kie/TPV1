@@ -41,7 +41,7 @@ constexpr array<TextureSpec, Game::NUM_TEXTURES> textureList{
 };
 
 Game::Game()
-  : exit(false), rndGenerator(time(0)), homedFrogs(NUM_NIDOS), timeNextWasp(0)
+  : exit(false), rndGenerator(time(0)), homedFrogs(NUM_NIDOS), timeNextWasp(0), nFreeNests(5)
 {
 	// Carga SDL y sus bibliotecas auxiliares
 	SDL_Init(SDL_INIT_VIDEO);
@@ -81,9 +81,6 @@ Game::Game()
 
 Game::~Game()
 {
-	for (size_t i = 0; i < textures.size(); i++) {
-		delete textures[i];
-	}
 
 	delete frog;
 
@@ -94,6 +91,10 @@ Game::~Game()
 	for (Turtle* t : turtles) delete t;
 
 	delete infoBar;
+
+	for (size_t i = 0; i < textures.size(); i++) {
+		delete textures[i];
+	}
 
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
@@ -151,47 +152,25 @@ Game::update()
 		}
 	}
 
-	// Comprobar colisiones
-	handleCollisions();
+    frog->checkCollisions();
 
 	checkVictory();
-}
-
-void Game::handleCollisions()
-{
-	// Buscamos colision
-	Collision colData = checkCollision(frog->getCollider());
-
-	// Realizamos accion correspondiente a dicha accion
-	switch (colData.type) {
-	case Collision::ENEMY:
-		frog->die();
-		frog->setVelocity(Vector2D<float>(0, 0));
-		break;
-	case Collision::PLATFORM:
-		frog->setVelocity(colData.vel);
-		break;
-	case Collision::HOME:
-		frog->resetPos();
-		break;
-	case Collision::NONE:
-		// Si cae al agua muere
-		if (frog->getFrogPos().getY() < RIVER_LOW)
-			frog->die();
-		frog->setVelocity(Vector2D<float>(0, 0));
-	}
 }
 
 void
 Game::run()
 {
 	while (!exit) {
+        Uint64 frameStart = SDL_GetTicks();
 		handleEvents();
 		update();
 		render();
+        Uint64 delta = SDL_GetTicks() - frameStart;
 
-		//TODO - Medir bien el tiempo y no parar si no hace falta
-        SDL_Delay((int)(DELTA_MS));
+        if(delta < DELTA_MS)
+        {
+            SDL_Delay((int)(DELTA_MS-delta));
+        }
 	}
 }
 
@@ -212,18 +191,14 @@ Game::handleEvents()
 // Devuelve el indice a un nido vacio aleatorio
 int Game::getRandomHomeIndex()
 {
-	int nNidosLibres = 0;
-	for (int i = 0; i < NUM_NIDOS; ++i)
-		if (!homedFrogs[i]->IsActive()) ++nNidosLibres;
-
 	// No hay nidos libres
-	if (nNidosLibres == 0) return -1;
+	if (nFreeNests == 0) return -1;
 
 	// Escogemos un nido libre aleatorio
-	int nNidoSeleccionado = getRandomRange(1, nNidosLibres);
+	int nNidoSeleccionado = getRandomRange(1, nFreeNests);
 
 	// Buscamos que indice es ese nido libre escogido
-	nNidosLibres = 0;
+	int nNidosLibres = 0;
 	int i = 0;
 	while (nNidosLibres != nNidoSeleccionado) {
 		if (!homedFrogs[i]->IsActive()) ++nNidosLibres;
@@ -234,9 +209,12 @@ int Game::getRandomHomeIndex()
 
 void Game::checkVictory()
 {
-	int i = 0;
-	while (i < homedFrogs.size() && homedFrogs[i]->IsActive()) ++i;
-	if (i >= homedFrogs.size()) endGame(false);
+	if (nFreeNests <= 0) endGame(false);
+}
+
+void Game::occupyNest()
+{
+    nFreeNests--;
 }
 
 Collision
@@ -259,13 +237,7 @@ Game::checkCollision(const SDL_FRect& rect) const
 	for (HomedFrog* f : homedFrogs)
 	{
 		colData = f->checkCollision(rect);
-		if (colData.type != colData.NONE) 
-		{
-			// Si el nido no se ha activado, lo activamos
-			if(!f->IsActive())
-				f->SetActive();
-			return colData;
-		}
+		if (colData.type != colData.NONE) return colData;
 	}
 
 	for (Log* l : logs)

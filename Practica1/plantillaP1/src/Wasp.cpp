@@ -11,7 +11,7 @@ void Wasp::render() const {
 }
 
 void Wasp::update() {
-	m_nTiempoVida -= m_pGame->DELTA;
+	m_nTiempoVida -= Game::DELTA;
 }
 
 Collision Wasp::checkCollision(const SDL_FRect& other) const {

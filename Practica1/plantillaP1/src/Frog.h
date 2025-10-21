@@ -1,7 +1,7 @@
 #pragma once
 #include "game.h"
 #include "texture.h"
-#include "Vector2D.h"
+#include "vector2D.h"
 
 class Game;
 
@@ -28,11 +28,12 @@ public:
 	void render() const;
 	void update();
 	void handleEvent(const SDL_Event&);
+    void checkCollisions();
 
 	const SDL_FRect getCollider() const;
-	const Vector2D<float>& getFrogPos() const;
 	int getFrogHealth() const;
-	void setVelocity(Vector2D<float> vel);
+
+private:
 	void die();
 	void resetPos();
 };

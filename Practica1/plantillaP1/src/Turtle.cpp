@@ -29,20 +29,20 @@ void Turtle::render() const
 
 void Turtle::update()
 {
-	m_Pos = m_Pos + m_Vel * m_pGame->DELTA;
+	m_Pos = m_Pos + m_Vel * Game::DELTA;
 
-	m_fnextFrameTimer -= m_pGame->DELTA;
+	m_fnextFrameTimer -= Game::DELTA;
 	if (m_fnextFrameTimer <= 0)
 	{
-		m_nCurrFrame = (m_nCurrFrame + 1) % 7;
+		m_nCurrFrame = (m_nCurrFrame + 1) % m_pTexture->getNumColumns();
 		m_fnextFrameTimer = ANIM_PER;
 	}
 
 
-	if (m_Pos.getX() < m_pGame->BAST_IZQ)
-		m_Pos.setX(m_pGame->WINDOW_WIDTH + m_pGame->BAST_DER);
-	else if (m_Pos.getX() > m_pGame->WINDOW_WIDTH + m_pGame->BAST_DER)
-		m_Pos.setX(m_pGame->BAST_IZQ);
+	if (m_Pos.getX() < Game::BAST_IZQ)
+		m_Pos.setX(Game::WINDOW_WIDTH + Game::BAST_DER);
+	else if (m_Pos.getX() > Game::WINDOW_WIDTH + Game::BAST_DER)
+		m_Pos.setX(Game::BAST_IZQ);
 }
 
 Collision Turtle::checkCollision(const SDL_FRect& other) const

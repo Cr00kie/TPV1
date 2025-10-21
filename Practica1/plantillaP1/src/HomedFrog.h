@@ -1,7 +1,7 @@
 #pragma once
 #include "game.h"
 #include "texture.h"
-#include "Vector2D.h"
+#include "vector2D.h"
 
 class Game;
 struct Collision;
@@ -16,7 +16,8 @@ private:
 public:
 	HomedFrog(Game* game, Texture* texture, const Vector2D<float>& pos);
 	void render() const;
-	Collision checkCollision(const SDL_FRect&) const;
+    // No lo hago const porque debe ser capaz de activarse si colisiona con la rana
+	Collision checkCollision(const SDL_FRect&);
 	void update();
 	bool IsActive() const;
 	void SetActive();

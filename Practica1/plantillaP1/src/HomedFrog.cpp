@@ -12,7 +12,8 @@ void HomedFrog::render() const {
 	}
 }
 
-Collision HomedFrog::checkCollision(const SDL_FRect& other) const {
+// No lo hago const porque debe ser capaz de activarse si colisiona con la rana
+Collision HomedFrog::checkCollision(const SDL_FRect& other) {
     float width = (float)m_pTexture->getFrameWidth();
     float height = (float)m_pTexture->getFrameHeight();
     float x = (float)m_Pos.getX();
@@ -24,6 +25,7 @@ Collision HomedFrog::checkCollision(const SDL_FRect& other) const {
 	if (SDL_HasRectIntersectionFloat(&rect, &other))
 	{
 		ret.type = m_bIsActive ? ret.ENEMY : ret.HOME;
+        SetActive();
 	}
 	else {
 		ret.type = ret.NONE;
@@ -42,4 +44,5 @@ bool HomedFrog::IsActive() const
 void HomedFrog::SetActive()
 {
 	m_bIsActive = true;
+    m_pGame->occupyNest();
 }

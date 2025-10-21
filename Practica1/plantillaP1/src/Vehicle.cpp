@@ -27,11 +27,11 @@ void Vehicle::render() const {
 }
 
 void Vehicle::update() {
-	m_Pos = m_Pos + m_Vel * m_pGame->DELTA;
+	m_Pos = m_Pos + m_Vel * Game::DELTA;
 
-	if (m_Pos.getX() < m_pGame->BAST_IZQ)
-		m_Pos.setX(m_pGame->WINDOW_WIDTH);
-	else if (m_Pos.getX() > m_pGame->WINDOW_WIDTH + m_pGame->BAST_DER)
+	if (m_Pos.getX() < Game::BAST_IZQ)
+		m_Pos.setX(Game::WINDOW_WIDTH);
+	else if (m_Pos.getX() > Game::WINDOW_WIDTH + Game::BAST_DER)
 		m_Pos.setX(-(float)m_pTexture->getFrameWidth());
 }
 

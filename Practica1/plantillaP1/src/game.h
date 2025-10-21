@@ -86,10 +86,10 @@ private:
 
 	void render() const;
 	void update();
-	void handleCollisions();
 	void handleEvents();
 	int getRandomHomeIndex();
 	void checkVictory();
+    
 
 	int exit;
 
@@ -100,6 +100,7 @@ private:
 	std::vector<Vehicle*> vehicles;
 	std::vector<Log*> logs;
 	std::vector<HomedFrog*> homedFrogs;
+    int nFreeNests;
 	std::vector<Wasp*> wasps;
 	std::vector<Turtle*> turtles;
 	float timeNextWasp;
@@ -125,6 +126,8 @@ checkCollision(const SDL_FRect& rect) const;
 	int getRandomRange(int min, int max);
 
 	void endGame(bool hasLost);
+    // Para que la homedFrog actualiza los nFreeNests
+    void occupyNest();
 };
 
 inline Texture*

@@ -35,25 +35,25 @@ void Frog::update() {
 
 		// Comprueba que la rana este en los limites
 		if (m_Pos.getX() < 0) m_Pos.setX(m_Pos.getX() + STEP);
-		else if (m_Pos.getX() > m_pGame->WINDOW_WIDTH-STEP) m_Pos.setX(m_Pos.getX() - STEP);
+		else if (m_Pos.getX() > Game::WINDOW_WIDTH-STEP) m_Pos.setX(m_Pos.getX() - STEP);
 		
 		if (m_Pos.getY() < 0) m_Pos.setY(m_Pos.getY() + STEP);
-		else if (m_Pos.getY() > m_pGame->HUD_POS_Y-STEP) m_Pos.setY(m_Pos.getY() - STEP);
+		else if (m_Pos.getY() > Game::HUD_POS_Y-STEP) m_Pos.setY(m_Pos.getY() - STEP);
 
 		m_bMove = false;
 	}
 
 	// Actualiza posicion por fisica
-	m_Pos = m_Pos + (m_Vel * m_pGame->DELTA);
+	m_Pos = m_Pos + (m_Vel * Game::DELTA);
 
 	// Comprueba si la rana ha sido arrastrada fuera
 	if (m_Pos.getX() < 0 || m_Pos.getY() < 0
-		|| m_Pos.getX() > m_pGame->WINDOW_WIDTH || m_Pos.getY() > m_pGame->WINDOW_HEIGHT) {
+		|| m_Pos.getX() > Game::WINDOW_WIDTH || m_Pos.getY() > Game::WINDOW_HEIGHT) {
 		die();	
 	}
 
 	// Animacion
-	m_fAnimTime -= m_pGame->DELTA;
+	m_fAnimTime -= Game::DELTA;
 }
 
 void Frog::handleEvent(const SDL_Event& event)
@@ -68,24 +68,39 @@ void Frog::handleEvent(const SDL_Event& event)
 	}
 }
 
+void Frog::checkCollisions()
+{
+    // Buscamos colision
+    Collision colData = m_pGame->checkCollision(getCollider());
+
+    // Realizamos accion correspondiente a dicha accion
+    switch (colData.type) {
+    case Collision::ENEMY:
+        die();
+        m_Vel = Vector2D<float>(0, 0);
+        break;
+    case Collision::PLATFORM:
+        m_Vel = colData.vel;
+        break;
+    case Collision::HOME:
+        resetPos();
+        break;
+    case Collision::NONE:
+        // Si cae al agua muere
+        if (m_Pos.getY() < Game::RIVER_LOW)
+            die();
+        m_Vel = Vector2D<float>(0, 0);
+    }
+}
+
 const SDL_FRect Frog::getCollider() const
 {
 	return SDL_FRect(m_Pos.getX() + COLLIDER_REDUCTION, m_Pos.getY() + COLLIDER_REDUCTION, float(m_pTexture->getFrameWidth() - COLLIDER_REDUCTION*2), float(m_pTexture->getFrameHeight() - COLLIDER_REDUCTION*2));
 }
 
-const Vector2D<float>& Frog::getFrogPos() const
-{
-	return m_Pos;
-}
-
 int Frog::getFrogHealth() const
 {
 	return m_nHealth;
-}
-
-void Frog::setVelocity(Vector2D<float> vel)
-{
-	m_Vel = vel;
 }
 
 void Frog::die()
