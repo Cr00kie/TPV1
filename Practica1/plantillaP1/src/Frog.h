@@ -1,20 +1,18 @@
 #pragma once
-#include "game.h"
 #include "texture.h"
 #include "vector2D.h"
+#include "SceneObject.h"
+#include "Collision.h"
 
 class Game;
+struct Collision;
 
-
-class Frog {
+class Frog : public SceneObject{
 private:
 	static constexpr int STEP = 32;
 	static constexpr float ANIM_DURATION = 0.08f;
 	static constexpr int DEFAULT_MAX_HEALTH = 3;
-	static constexpr int COLLIDER_REDUCTION = 10;
-	Game* m_pGame;
-	Texture* m_pTexture;
-	Vector2D<float> m_Pos;
+	static constexpr int COLLIDER_REDUCTION = 15;
 	Vector2D<float> m_StartPos;
 	Vector2D<float> m_Vel;
 	Vector2D<float> m_LastDir;
@@ -27,10 +25,10 @@ public:
 	Frog(Game* game, Texture* texture, std::istream& is, int maxHealth = DEFAULT_MAX_HEALTH);
 	void render() const;
 	void update();
-	void handleEvent(const SDL_Event&);
+	void handleEvent(const SDL_Event&) override;
     void checkCollisions();
+    Collision checkCollision(SDL_FRect other) override { return Collision(); }
 
-	const SDL_FRect getCollider() const;
 	int getFrogHealth() const;
 
 private:

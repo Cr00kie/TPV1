@@ -9,11 +9,7 @@
 //
 
 // TODO
-// - [x] cambiar a Game::CONSTANTE
-// - [x] checkCollisions en la rana
-// - [x] nNidosAlive variable de game
-// - [x] Set is active de homedFrog en la propia homedFrog
-// - [x] Contar tiempo de update y hacer bien el SDL_DELAY
+// - [ ] 
 
 
 #include "game.h"

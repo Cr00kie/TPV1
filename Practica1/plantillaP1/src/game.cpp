@@ -41,7 +41,7 @@ constexpr array<TextureSpec, Game::NUM_TEXTURES> textureList{
 };
 
 Game::Game()
-  : exit(false), rndGenerator(time(0)), homedFrogs(NUM_NIDOS), timeNextWasp(0), nFreeNests(5)
+  : exit(false), rndGenerator(time(0)), timeNextWasp(0), nFreeNests(NUM_NIDOS), nidos(NUM_NIDOS)
 {
 	// Carga SDL y sus bibliotecas auxiliares
 	SDL_Init(SDL_INIT_VIDEO);
@@ -70,7 +70,9 @@ Game::Game()
 
 	// Crea las ranas en los nidos
 	for (int i = 0; i < NUM_NIDOS; ++i) {
-		homedFrogs[i] = new HomedFrog(this, textures[FROG], Vector2D<float>(PRIMER_NIDO_X + i * DIST_NIDOS, PRIMER_NIDO_Y));
+        HomedFrog* pF = new HomedFrog(this, textures[TextureName::FROG], Vector2D<float>(PRIMER_NIDO_X + i * DIST_NIDOS, PRIMER_NIDO_Y));
+        nidos[i] = pF;
+        gameObjects.push_back(pF);
 	}
 
 	infoBar = new InfoBar(this, textures[FROG], Vector2D(HUD_POS_X, HUD_POS_Y));
@@ -82,13 +84,7 @@ Game::Game()
 Game::~Game()
 {
 
-	delete frog;
-
-	for (Vehicle* v : vehicles) delete v;
-	for (Log* l : logs) delete l;
-	for (HomedFrog* f : homedFrogs) delete f;
-	for (Wasp* w : wasps) delete w;
-	for (Turtle* t : turtles) delete t;
+    for (SceneObject* go : gameObjects) delete go;
 
 	delete infoBar;
 
@@ -107,15 +103,9 @@ Game::render() const
 
 	textures[BACKGROUND]->render();
 
-	for (Vehicle* v : vehicles) v->render();
-	for (Log* l : logs) l->render();
-	for (HomedFrog* f : homedFrogs) f->render();
-	for (Wasp* w : wasps) w->render();
-	for (Turtle* t : turtles) t->render();
-
-	frog->render();
-
-	infoBar->render(frog->getFrogHealth());
+    for (SceneObject* go : gameObjects) go->render();
+    
+	infoBar->render();
 
 	SDL_RenderPresent(renderer);
 }
@@ -126,33 +116,29 @@ Game::update()
 	//Crea la avispa
 	if (timeNextWasp <= 0)
 	{
-		wasps.push_back(new Wasp(this, textures[WASP],
-			Vector2D<float>(PRIMER_NIDO_X + getRandomHomeIndex() * DIST_NIDOS, PRIMER_NIDO_Y),
-			Vector2D<float>(0, 0),
-			float(getRandomRange(MIN_WASP_ALIVE, MAX_WASP_ALIVE))));
+        Wasp* wasp = new Wasp(this, textures[WASP],
+            Vector2D<float>(PRIMER_NIDO_X + getRandomHomeIndex() * DIST_NIDOS, PRIMER_NIDO_Y),
+            Vector2D<float>(0, 0),
+            float(getRandomRange(MIN_WASP_ALIVE, MAX_WASP_ALIVE)));
+        gameObjects.push_back(wasp);
+        wasp->SetAnchor(--gameObjects.end());
+
 		timeNextWasp = (float)getRandomRange(MAX_WASP_ALIVE+MIN_WASP_DEAD, MAX_WASP_ALIVE+MAX_WASP_DEAD);
 	}
 	timeNextWasp -= DELTA;
 
-	// Actualizar objetos
-	frog->update();
+    for (SceneObject* go : gameObjects) {
+        go->update();
+    }
 
-	for (Vehicle* v : vehicles) v->update();
-	for (Log* l : logs) l->update();
-	for (Turtle* t : turtles) t->update();
-	for (int i = 0; i < wasps.size(); ) {
-		wasps[i]->update();
-		if (!wasps[i]->isAlive())
-		{
-			delete wasps[i];
-			wasps.erase(wasps.begin() + i);
-		}
-		else {
-			++i;
-		}
-	}
+    for (int i = 0; i < objectsToDelete.size(); ++i) {
+        gameObjects.erase(objectsToDelete[i]);
+    }
+    objectsToDelete.clear();
 
     frog->checkCollisions();
+
+    infoBar->updateVidas(frog->getFrogHealth());
 
 	checkVictory();
 }
@@ -184,7 +170,7 @@ Game::handleEvents()
 		if (event.type == SDL_EVENT_QUIT)
 			exit = true;
 
-		frog->handleEvent(event);
+        frog->handleEvent(event);
 	}
 }
 
@@ -201,7 +187,7 @@ int Game::getRandomHomeIndex()
 	int nNidosLibres = 0;
 	int i = 0;
 	while (nNidosLibres != nNidoSeleccionado) {
-		if (!homedFrogs[i]->IsActive()) ++nNidosLibres;
+        if (!nidos[i]->IsActive()) ++nNidosLibres;
 		++i;
 	}
 	return i-1; // Corregimos el ++i del bucle
@@ -217,41 +203,20 @@ void Game::occupyNest()
     nFreeNests--;
 }
 
+void Game::deleteAfter(Anchor object)
+{
+    objectsToDelete.push_back(object);
+}
+
 Collision
 Game::checkCollision(const SDL_FRect& rect) const
 {
 	Collision colData;
 
-	for (Vehicle* v : vehicles) 
-	{
-		colData = v->checkCollision(rect);
-		if (colData.type != colData.NONE) return colData;
-	}
-
-	for(Wasp* w : wasps)
-	{
-		colData = w->checkCollision(rect);
-		if (colData.type != colData.NONE) return colData;
-	}
-
-	for (HomedFrog* f : homedFrogs)
-	{
-		colData = f->checkCollision(rect);
-		if (colData.type != colData.NONE) return colData;
-	}
-
-	for (Log* l : logs)
-	{
-		colData = l->checkCollision(rect);
-		if (colData.type != colData.NONE) return colData;
-	}
-
-	for (Turtle* t : turtles)
-	{
-		colData = t->checkCollision(rect);
-		if (colData.type != colData.NONE) return colData;
-	}
-
+    for (SceneObject* go : gameObjects) {
+        colData = go->checkCollision(rect);
+        if (colData.type != colData.NONE) return colData;
+    }
 
 	return colData;
 }
@@ -268,16 +233,18 @@ void Game::loadMap()
 		{
 			switch (id) {
 			case 'F':
-				frog = new Frog(this, textures[FROG], file);
+                frog = new Frog(this, textures[FROG], file);
+				gameObjects.push_back(frog);
 				break;
 			case 'V':
-				vehicles.push_back(new Vehicle(this, textures[CAR1], file));
+				gameObjects.push_back(new Vehicle(this, textures[CAR1], file));
 				break;
 			case 'L':
-				logs.push_back(new Log(this, textures[LOG1], file));
+                gameObjects.push_back(new Log(this, textures[LOG1], file));
 				break;
 			case 'T':
-				turtles.push_back(new Turtle(this, textures[TURTLE], file));
+                gameObjects.push_back(new TurtleGroup(this, textures[TURTLE], file));
+                break;
 			case '#':
 				break;
 			default:

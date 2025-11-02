@@ -3,6 +3,7 @@
 
 #include <SDL3/SDL.h>
 #include <array>
+#include <list>
 #include <vector>
 #include <random>
 
@@ -23,7 +24,7 @@ class Log;
 class Vehicle;
 class Wasp;
 class InfoBar;
-class Turtle;
+class TurtleGroup;
 struct Collision;
 
 /**
@@ -32,6 +33,7 @@ struct Collision;
 class Game
 {
 public:
+    using Anchor = std::list<SceneObject*>::iterator;
 	// Se actualiza el juego cada tantos milisegundos
 	static constexpr int FRAME_RATE = 30;
 	static constexpr float DELTA = 1.f/FRAME_RATE;
@@ -52,14 +54,13 @@ public:
 	static constexpr float PRIMER_NIDO_X = 14.f;
 	static constexpr float PRIMER_NIDO_Y = 21.f;
 	// Tiempo de vida de avispa
-	static constexpr int MIN_WASP_ALIVE = 5;
-	static constexpr int MAX_WASP_ALIVE = 10;
+	static constexpr int MIN_WASP_ALIVE = 4;
+	static constexpr int MAX_WASP_ALIVE = 7;
 	// Tiempo sin avispa en pantalla
 	static constexpr int MIN_WASP_DEAD = 5;
-	static constexpr int MAX_WASP_DEAD = 10;
+	static constexpr int MAX_WASP_DEAD = 8;
 	// Bastidores
-	static constexpr int BAST_IZQ = -150;
-	static constexpr int BAST_DER = 150;
+    static constexpr int BAST = 150;
 
 	enum TextureName
 	{
@@ -95,15 +96,12 @@ private:
 
 	// Elemento del juego
 	// TODO: añadir atributos para los objetos del juego
-	Frog* frog;
-	HomedFrog *homedFrog;
-	std::vector<Vehicle*> vehicles;
-	std::vector<Log*> logs;
-	std::vector<HomedFrog*> homedFrogs;
+    std::list<SceneObject*> gameObjects;
+    Frog* frog;
+    std::vector<HomedFrog*> nidos;
     int nFreeNests;
-	std::vector<Wasp*> wasps;
-	std::vector<Turtle*> turtles;
 	float timeNextWasp;
+    std::vector<Anchor> objectsToDelete;
 
 	InfoBar* infoBar;
 
@@ -128,6 +126,8 @@ checkCollision(const SDL_FRect& rect) const;
 	void endGame(bool hasLost);
     // Para que la homedFrog actualiza los nFreeNests
     void occupyNest();
+
+    void deleteAfter(Anchor object);
 };
 
 inline Texture*

@@ -1,15 +1,18 @@
 #pragma once
 
 #include "vector2D.h"
+#include "GameObject.h"
 class Game;
 class Texture;
-class InfoBar
+class InfoBar : public GameObject
 {
-	Game* m_pGame;
 	Texture* m_pTexture;
 	Vector2D<int> m_Pos;
+    int m_nVidas;
 public:
 	InfoBar(Game*, Texture*, Vector2D<int>);
-	void render(int);
+	void render() const override;
+    void update() override {}
+    void updateVidas(int vidas) { m_nVidas = vidas; }
 };
 

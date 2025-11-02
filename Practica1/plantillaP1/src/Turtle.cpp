@@ -5,32 +5,24 @@
 #include <string>
 using namespace std::string_literals;
 
-Turtle::Turtle(Game* game, Texture* texture, const Vector2D<float>& pos, const Vector2D<float>& vel)
-	: m_pGame(game), m_pTexture(texture), m_Pos(pos), m_Vel(vel), m_fnextFrameTimer(ANIM_PER), m_nCurrFrame(0)
+TurtleGroup::TurtleGroup(Game* game, Texture* texture, const Vector2D<float>& pos, const Vector2D<float>& vel)
+	: Platform(game, texture, pos, vel, Game::BAST * 2 + Game::WINDOW_WIDTH), m_fnextFrameTimer(ANIM_PER), m_nCurrFrame(0)
 {
 }
 
-Turtle::Turtle(Game* game, Texture* texture, std::istream& is)
-	: m_pGame(game), m_pTexture(texture), m_fnextFrameTimer(ANIM_PER), m_nCurrFrame(0)
+TurtleGroup::TurtleGroup(Game* game, Texture* texture, std::istream& is)
+	: Platform(game, texture, is, Game::BAST * 2 + Game::WINDOW_WIDTH), m_fnextFrameTimer(ANIM_PER), m_nCurrFrame(0)
 {
-	float x, y, vX;
-	is >> x >> y >> vX;
-	m_Pos.setX(x); m_Pos.setY(y);
-	m_Vel.setX(vX);
-
-	m_pTexture = game->getTexture(Game::TextureName(Game::TURTLE));
 }
 
-void Turtle::render() const
+void TurtleGroup::render() const
 {
 	SDL_FRect pos = { m_Pos.getX(), m_Pos.getY(), float(m_pTexture->getFrameWidth()), float(m_pTexture->getFrameHeight()) };
 	m_pTexture->renderFrame(pos, 0, m_nCurrFrame, SDL_FLIP_HORIZONTAL);
 }
 
-void Turtle::update()
+void TurtleGroup::update()
 {
-	m_Pos = m_Pos + m_Vel * Game::DELTA;
-
 	m_fnextFrameTimer -= Game::DELTA;
 	if (m_fnextFrameTimer <= 0)
 	{
@@ -38,23 +30,13 @@ void Turtle::update()
 		m_fnextFrameTimer = ANIM_PER;
 	}
 
-
-	if (m_Pos.getX() < Game::BAST_IZQ)
-		m_Pos.setX(Game::WINDOW_WIDTH + Game::BAST_DER);
-	else if (m_Pos.getX() > Game::WINDOW_WIDTH + Game::BAST_DER)
-		m_Pos.setX(Game::BAST_IZQ);
+    Platform::update();
 }
 
-Collision Turtle::checkCollision(const SDL_FRect& other) const
+Collision TurtleGroup::checkCollision(SDL_FRect other)
 {
-    float width = (float)m_pTexture->getFrameWidth();
-    float height = (float)m_pTexture->getFrameHeight();
-    float x = (float)m_Pos.getX();
-    float y = (float)m_Pos.getY();
-
-	SDL_FRect rect = { x, y, width, height };
-
-	if (SDL_HasRectIntersectionFloat(&rect, &other))
+    SDL_FRect rect = getBoundingBox();
+    if (SDL_HasRectIntersectionFloat(&rect, &other))
 		return m_nCurrFrame == 5 ? Collision(Collision::NONE) : Collision(Collision::PLATFORM, m_Vel);
 
 	return Collision(Collision::NONE);

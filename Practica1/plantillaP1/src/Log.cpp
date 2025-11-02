@@ -4,48 +4,17 @@
 using namespace std::string_literals;
 
 Log::Log(Game* game, Texture* texture, const Vector2D<float>& pos, const Vector2D<float>& vel)
-	: m_pGame(game), m_pTexture(texture), m_Pos(pos), m_Vel(vel)
+	: Platform(game, texture, pos, vel, Game::BAST*2+Game::WINDOW_WIDTH)
 {
 }
 
 Log::Log(Game* game, Texture* texture, std::istream& is)
-	: m_pGame(game), m_pTexture(texture)
+	: Platform(game, texture, is, Game::BAST*2 + Game::WINDOW_WIDTH)
 {
-	float x, y, vX;
 	int type;
-	is >> x >> y >> vX >> type;
-	m_Pos.setX(x); m_Pos.setY(y);
-	m_Vel.setX(vX);
+	is >> type;
 
 	if (type < 0 || type > 1) throw "Error: no se ha podido leer log"s;
 
 	m_pTexture = game->getTexture(Game::TextureName(Game::LOG1 + type));
-}
-
-void Log::render() const {
-	SDL_FRect pos = { m_Pos.getX(), m_Pos.getY(), float(m_pTexture->getFrameWidth()), float(m_pTexture->getFrameHeight())};
-	m_pTexture->render(pos);
-}
-
-void Log::update() {
-	m_Pos = m_Pos + m_Vel * Game::DELTA;
-
-	if (m_Pos.getX() < Game::BAST_IZQ)
-		m_Pos.setX(Game::WINDOW_WIDTH + Game::BAST_DER);
-	else if (m_Pos.getX() > Game::WINDOW_WIDTH + Game::BAST_DER)
-		m_Pos.setX(Game::BAST_IZQ);
-}
-
-Collision Log::checkCollision(const SDL_FRect& other) const {
-    float width = (float)m_pTexture->getFrameWidth();
-    float height = (float)m_pTexture->getFrameHeight();
-    float x = (float)m_Pos.getX();
-    float y = (float)m_Pos.getY();
-
-	SDL_FRect rect = { x, y, width, height };
-
-	if(SDL_HasRectIntersectionFloat(&rect, &other))
-		return Collision(Collision::PLATFORM, m_Vel);
-
-	return Collision(Collision::NONE);
 }

@@ -1,21 +1,17 @@
 #include "Frog.h"
+#include "game.h"
 #include <cmath>
 
 Frog::Frog(Game* game, Texture* texture, const Vector2D<float>& pos, int maxHelath)
-	: m_pGame(game), m_pTexture(texture), 
-	  m_Pos(pos), m_StartPos(m_Pos), 
+	: SceneObject(game, texture, pos, texture->getFrameWidth()-COLLIDER_REDUCTION, texture->getFrameHeight()-COLLIDER_REDUCTION), m_StartPos(pos), 
 	  m_nHealth(maxHelath), m_LastDir(0,0), 
-	  m_Vel(0,0), m_bMove(false) {}
+	  m_bMove(false), m_fAnimTime(0) {}
 
 Frog::Frog(Game* game, Texture* texture, std::istream& is, int maxHealth)
-	: m_pGame(game), m_pTexture(texture), 
+	: SceneObject(game, texture, is, texture->getFrameWidth() - COLLIDER_REDUCTION, texture->getFrameHeight() - COLLIDER_REDUCTION),
 	  m_nHealth(maxHealth), m_LastDir(0,0), 
-	  m_Vel(0,0), m_bMove(false)
+	  m_bMove(false), m_fAnimTime(0)
 {
-	float x, y;
-	is >> x >> y;
-	m_Pos.setX(x);
-	m_Pos.setY(y);
 	m_StartPos = m_Pos;
 }
 
@@ -70,8 +66,9 @@ void Frog::handleEvent(const SDL_Event& event)
 
 void Frog::checkCollisions()
 {
+    SDL_FRect box = getBoundingBox();
     // Buscamos colision
-    Collision colData = m_pGame->checkCollision(getCollider());
+    Collision colData = m_pGame->checkCollision(getBoundingBox());
 
     // Realizamos accion correspondiente a dicha accion
     switch (colData.type) {
@@ -91,11 +88,6 @@ void Frog::checkCollisions()
             die();
         m_Vel = Vector2D<float>(0, 0);
     }
-}
-
-const SDL_FRect Frog::getCollider() const
-{
-	return SDL_FRect(m_Pos.getX() + COLLIDER_REDUCTION, m_Pos.getY() + COLLIDER_REDUCTION, float(m_pTexture->getFrameWidth() - COLLIDER_REDUCTION*2), float(m_pTexture->getFrameHeight() - COLLIDER_REDUCTION*2));
 }
 
 int Frog::getFrogHealth() const
