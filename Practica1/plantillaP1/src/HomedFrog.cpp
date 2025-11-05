@@ -1,7 +1,7 @@
 #include "HomedFrog.h"
 
-HomedFrog::HomedFrog(Game* game, Texture* texture, const Vector2D<float>& pos)
-	: SceneObject(game, texture, pos), m_bIsActive(false)
+HomedFrog::HomedFrog(Game* game, Texture* texture, const Vector2D<float>& pos, int index)
+	: SceneObject(game, texture, pos), m_bIsActive(false), m_nIndex(index)
 {}
 
 void HomedFrog::render() const {
@@ -37,5 +37,5 @@ bool HomedFrog::IsActive() const
 void HomedFrog::SetActive()
 {
 	m_bIsActive = true;
-    m_pGame->occupyNest();
+    m_pGame->occupyNest(m_nIndex);
 }

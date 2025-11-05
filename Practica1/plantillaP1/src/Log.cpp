@@ -17,4 +17,7 @@ Log::Log(Game* game, Texture* texture, std::istream& is)
 	if (type < 0 || type > 1) throw "Error: no se ha podido leer log"s;
 
 	m_pTexture = game->getTexture(Game::TextureName(Game::LOG1 + type));
+
+    m_nWidth = m_pTexture->getFrameWidth();
+    m_nHeight = m_pTexture->getFrameHeight();
 }

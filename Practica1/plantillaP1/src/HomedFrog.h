@@ -10,13 +10,16 @@ struct Collision;
 class HomedFrog : public SceneObject{
 private:
 	bool m_bIsActive;
+    int m_nIndex;
 
 public:
-	HomedFrog(Game* game, Texture* texture, const Vector2D<float>& pos);
+	HomedFrog(Game* game, Texture* texture, const Vector2D<float>& pos, int index);
 	void render() const;
     // No lo hago const porque debe ser capaz de activarse si colisiona con la rana
     Collision checkCollision(SDL_FRect) override;
 	void update();
 	bool IsActive() const;
+
+private:
 	void SetActive();
 };

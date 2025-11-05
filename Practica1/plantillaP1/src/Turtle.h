@@ -16,6 +16,8 @@ class TurtleGroup : public Platform
 private:
 	float m_fnextFrameTimer;
 	int m_nCurrFrame;
+    bool m_bDive;
+    int m_nGroupSize;
 
 public:
 	TurtleGroup(Game* game, Texture* texture, const Vector2D<float>& pos, const Vector2D<float>& vel);

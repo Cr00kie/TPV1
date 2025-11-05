@@ -41,7 +41,7 @@ constexpr array<TextureSpec, Game::NUM_TEXTURES> textureList{
 };
 
 Game::Game()
-  : exit(false), rndGenerator(time(0)), timeNextWasp(0), nFreeNests(NUM_NIDOS), nidos(NUM_NIDOS)
+  : exit(false), rndGenerator(time(0)), timeNextWasp(0), nFreeNests(NUM_NIDOS)
 {
 	// Carga SDL y sus bibliotecas auxiliares
 	SDL_Init(SDL_INIT_VIDEO);
@@ -70,8 +70,8 @@ Game::Game()
 
 	// Crea las ranas en los nidos
 	for (int i = 0; i < NUM_NIDOS; ++i) {
-        HomedFrog* pF = new HomedFrog(this, textures[TextureName::FROG], Vector2D<float>(PRIMER_NIDO_X + i * DIST_NIDOS, PRIMER_NIDO_Y));
-        nidos[i] = pF;
+        HomedFrog* pF = new HomedFrog(this, textures[TextureName::FROG], Vector2D<float>(PRIMER_NIDO_X + i * DIST_NIDOS, PRIMER_NIDO_Y), i);
+        nidos[i] = false;
         gameObjects.push_back(pF);
 	}
 
@@ -136,8 +136,6 @@ Game::update()
     }
     objectsToDelete.clear();
 
-    frog->checkCollisions();
-
     infoBar->updateVidas(frog->getFrogHealth());
 
 	checkVictory();
@@ -170,6 +168,26 @@ Game::handleEvents()
 		if (event.type == SDL_EVENT_QUIT)
 			exit = true;
 
+        if (event.type == SDL_EVENT_KEY_DOWN && event.key.key == SDLK_0) {
+            const SDL_MessageBoxButtonData buttons[] = {
+                {SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, 0, "Cancel"},
+                {0, 1, "Accept"},
+            };
+            SDL_MessageBoxData boxData = {
+                SDL_MESSAGEBOX_INFORMATION,
+                window,
+                "Restarting game",
+                "Are you sure you want to restart the game?",
+                2,
+                buttons
+            };
+            int button;
+            SDL_ShowMessageBox(&boxData, &button);
+            if (button == 1) {
+                restartGame();
+            }
+        }
+
         frog->handleEvent(event);
 	}
 }
@@ -187,7 +205,7 @@ int Game::getRandomHomeIndex()
 	int nNidosLibres = 0;
 	int i = 0;
 	while (nNidosLibres != nNidoSeleccionado) {
-        if (!nidos[i]->IsActive()) ++nNidosLibres;
+        if (!nidos[i]) ++nNidosLibres;
 		++i;
 	}
 	return i-1; // Corregimos el ++i del bucle
@@ -198,8 +216,9 @@ void Game::checkVictory()
 	if (nFreeNests <= 0) endGame(false);
 }
 
-void Game::occupyNest()
+void Game::occupyNest(int index)
 {
+    nidos[index] = true;
     nFreeNests--;
 }
 
@@ -268,4 +287,20 @@ void Game::endGame(bool hasLost)
 	if (hasLost) std::cout << "Has perdido ...\n";
 	else std::cout << "Has ganado!\n";
 	exit = true;
+}
+
+void Game::restartGame() {
+    for (SceneObject* go : gameObjects) delete go;
+    delete infoBar;
+
+    gameObjects.clear();
+
+    for (int i = 0; i < NUM_NIDOS; ++i) {
+        HomedFrog* pF = new HomedFrog(this, textures[TextureName::FROG], Vector2D<float>(PRIMER_NIDO_X + i * DIST_NIDOS, PRIMER_NIDO_Y), i);
+        nidos[i] = false;
+        gameObjects.push_back(pF);
+    }
+
+    infoBar = new InfoBar(this, textures[FROG], Vector2D(HUD_POS_X, HUD_POS_Y));
+    loadMap();
 }

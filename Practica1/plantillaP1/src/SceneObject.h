@@ -21,7 +21,6 @@ public:
     SceneObject(Game*, Texture*, std::istream&, float = -1.f, float = -1.f);
     virtual ~SceneObject() = default;
     virtual Collision checkCollision(SDL_FRect other) = 0;
-    virtual void handleEvent(const SDL_Event&) {}
     void render() const override;
     virtual void update() = 0;
 };

@@ -12,7 +12,7 @@ private:
 	static constexpr int STEP = 32;
 	static constexpr float ANIM_DURATION = 0.08f;
 	static constexpr int DEFAULT_MAX_HEALTH = 3;
-	static constexpr int COLLIDER_REDUCTION = 15;
+	static constexpr int COLLIDER_REDUCTION = 5;
 	Vector2D<float> m_StartPos;
 	Vector2D<float> m_Vel;
 	Vector2D<float> m_LastDir;
@@ -25,7 +25,7 @@ public:
 	Frog(Game* game, Texture* texture, std::istream& is, int maxHealth = DEFAULT_MAX_HEALTH);
 	void render() const;
 	void update();
-	void handleEvent(const SDL_Event&) override;
+	void handleEvent(const SDL_Event&);
     void checkCollisions();
     Collision checkCollision(SDL_FRect other) override { return Collision(); }
 
@@ -34,4 +34,6 @@ public:
 private:
 	void die();
 	void resetPos();
+protected:
+    virtual SDL_FRect getBoundingBox() const;
 };

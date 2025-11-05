@@ -98,12 +98,14 @@ private:
 	// TODO: añadir atributos para los objetos del juego
     std::list<SceneObject*> gameObjects;
     Frog* frog;
-    std::vector<HomedFrog*> nidos;
+    bool nidos[NUM_NIDOS];
     int nFreeNests;
 	float timeNextWasp;
     std::vector<Anchor> objectsToDelete;
 
 	InfoBar* infoBar;
+
+    void restartGame();
 
 public:
 	Game();
@@ -125,7 +127,7 @@ checkCollision(const SDL_FRect& rect) const;
 
 	void endGame(bool hasLost);
     // Para que la homedFrog actualiza los nFreeNests
-    void occupyNest();
+    void occupyNest(int index);
 
     void deleteAfter(Anchor object);
 };

@@ -3,7 +3,7 @@
 #include <cmath>
 
 Frog::Frog(Game* game, Texture* texture, const Vector2D<float>& pos, int maxHelath)
-	: SceneObject(game, texture, pos, texture->getFrameWidth()-COLLIDER_REDUCTION, texture->getFrameHeight()-COLLIDER_REDUCTION), m_StartPos(pos), 
+	: SceneObject(game, texture, pos), m_StartPos(pos), 
 	  m_nHealth(maxHelath), m_LastDir(0,0), 
 	  m_bMove(false), m_fAnimTime(0) {}
 
@@ -50,6 +50,8 @@ void Frog::update() {
 
 	// Animacion
 	m_fAnimTime -= Game::DELTA;
+
+    checkCollisions();
 }
 
 void Frog::handleEvent(const SDL_Event& event)
@@ -107,5 +109,7 @@ void Frog::resetPos()
 	m_Pos = m_StartPos;
 	m_Vel = m_Vel * 0;
 }
+
+SDL_FRect Frog::getBoundingBox() const { return SDL_FRect(m_Pos.getX()+COLLIDER_REDUCTION, m_Pos.getY()+COLLIDER_REDUCTION, m_nWidth-COLLIDER_REDUCTION*2, m_nHeight-COLLIDER_REDUCTION*2); }
 
 
