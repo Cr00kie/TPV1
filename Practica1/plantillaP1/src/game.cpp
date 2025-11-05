@@ -6,6 +6,10 @@
 
 #include "texture.h"
 
+#include "SDLError.h"
+#include "FileNotFoundError.h"
+#include "FileFormatError.h"
+
 #include <fstream>
 #include <limits>
 
@@ -52,12 +56,12 @@ Game::Game()
 	                          0);
 
 	if (window == nullptr)
-		throw "window: "s + SDL_GetError();
+		throw SDLError();
 
 	renderer = SDL_CreateRenderer(window, nullptr);
 
 	if (renderer == nullptr)
-		throw "renderer: "s + SDL_GetError();
+		throw SDLError();
 
 	// Carga las texturas al inicio
 	for (size_t i = 0; i < textures.size(); i++) {
@@ -65,8 +69,7 @@ Game::Game()
 		textures[i] = new Texture(renderer, (string(imgBase) + name).c_str(), nrows, ncols);
 	}
 
-	// Carga los datos del archivo
-	loadMap();
+	
 
 	// Crea las ranas en los nidos
 	for (int i = 0; i < NUM_NIDOS; ++i) {
@@ -132,6 +135,7 @@ Game::update()
     }
 
     for (int i = 0; i < objectsToDelete.size(); ++i) {
+        delete (*objectsToDelete[i]);
         gameObjects.erase(objectsToDelete[i]);
     }
     objectsToDelete.clear();
@@ -144,6 +148,9 @@ Game::update()
 void
 Game::run()
 {
+    // Carga los datos del archivo
+    loadMap();
+
 	while (!exit) {
         Uint64 frameStart = SDL_GetTicks();
 		handleEvents();
@@ -243,7 +250,7 @@ Game::checkCollision(const SDL_FRect& rect) const
 void Game::loadMap()
 {
 	std::ifstream file(MAP_FILE);
-	if (!file.is_open()) throw "Error: No se encuentra el mapa: "s + MAP_FILE;
+	if (!file.is_open()) throw FileNotFoundError(MAP_FILE);
 	else {
 		char id;
 		int l = 1;
@@ -267,9 +274,9 @@ void Game::loadMap()
 			case '#':
 				break;
 			default:
-				throw "Error: Identificador de objeto invalido '"s + id + "' en la linea "s + std::to_string(l);
+                throw FileFormatError(MAP_FILE, l);
 			}
-			if (file.fail()) throw "Error: no se ha podido leer el objeto '"s + id + "' en la linea "s + std::to_string(l);
+			if (file.fail()) throw FileFormatError(MAP_FILE, l);
 			file.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 			file.get(id);
 			l++;

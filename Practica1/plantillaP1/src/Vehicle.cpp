@@ -13,7 +13,7 @@ Vehicle::Vehicle(Game * game, Texture * texture, std::istream & is)
 	int type;
 	is >> type;
 
-	if (type < 1 || type > 5) throw "Error: no se ha podido leer un coche"s;
+	//if (type < 1 || type > 5) throw "Error: no se ha podido leer un coche"s;
 
 	m_pTexture = game->getTexture(Game::TextureName(game->CAR1 + (type - 1)));
 }

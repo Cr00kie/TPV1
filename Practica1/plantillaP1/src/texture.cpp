@@ -2,6 +2,7 @@
 
 #include <SDL3_image/SDL_image.h>
 #include <string>
+#include "FileNotFoundError.h"
 
 using namespace std;
 
@@ -9,8 +10,8 @@ SDL_Texture* tryLoadTexture(SDL_Renderer* renderer, const char* filename)
 {
 	SDL_Texture* texture = IMG_LoadTexture(renderer, filename);
 
-	if (texture == nullptr)
-		throw "load image texture: "s + filename;
+    if (texture == nullptr)
+        throw FileNotFoundError(filename);
 
 	SDL_SetTextureScaleMode(texture, SDL_SCALEMODE_NEAREST);
 

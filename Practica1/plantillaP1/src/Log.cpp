@@ -1,6 +1,7 @@
 #include "Log.h"
 #include "Collision.h"
 #include <string>
+#include "FileFormatError.h"
 using namespace std::string_literals;
 
 Log::Log(Game* game, Texture* texture, const Vector2D<float>& pos, const Vector2D<float>& vel)
@@ -14,7 +15,7 @@ Log::Log(Game* game, Texture* texture, std::istream& is)
 	int type;
 	is >> type;
 
-	if (type < 0 || type > 1) throw "Error: no se ha podido leer log"s;
+	//if (type < 0 || type > 1) throw "Error: no se ha podido leer log"s;
 
 	m_pTexture = game->getTexture(Game::TextureName(Game::LOG1 + type));
 
