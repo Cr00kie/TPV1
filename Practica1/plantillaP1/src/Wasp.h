@@ -16,7 +16,7 @@ private:
 
 public:
 	Wasp(Game* game, Texture* texture, const Vector2D<float>& pos, const Vector2D<float>& vel, float tiempoVida);
-	void update();
+	void update() override;
 	Collision checkCollision(SDL_FRect) override;
 	bool isAlive() const;
     void SetAnchor(Anchor anchor);

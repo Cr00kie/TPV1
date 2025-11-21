@@ -23,8 +23,8 @@ private:
 public:
 	Frog(Game* game, Texture* texture, const Vector2D<float>& pos, int maxHealth = DEFAULT_MAX_HEALTH);
 	Frog(Game* game, Texture* texture, std::istream& is, int maxHealth = DEFAULT_MAX_HEALTH);
-	void render() const;
-	void update();
+	void render() const override;
+	void update() override;
 	void handleEvent(const SDL_Event&);
     void checkCollisions();
     Collision checkCollision(SDL_FRect other) override { return Collision(); }
@@ -35,5 +35,5 @@ private:
 	void die();
 	void resetPos();
 protected:
-    virtual SDL_FRect getBoundingBox() const;
+    virtual SDL_FRect getBoundingBox() const override;
 };

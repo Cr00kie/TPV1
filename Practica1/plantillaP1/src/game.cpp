@@ -55,48 +55,56 @@ Game::Game()
 	                          WINDOW_HEIGHT,
 	                          0);
 
-	if (window == nullptr)
-		throw SDLError();
+    textures.fill(nullptr);
 
-	renderer = SDL_CreateRenderer(window, nullptr);
+    try {
+        if (window == nullptr)
+            throw SDLError();
 
-	if (renderer == nullptr)
-		throw SDLError();
+        renderer = SDL_CreateRenderer(window, nullptr);
 
-	// Carga las texturas al inicio
-	for (size_t i = 0; i < textures.size(); i++) {
-		auto [name, nrows, ncols] = textureList[i];
-		textures[i] = new Texture(renderer, (string(imgBase) + name).c_str(), nrows, ncols);
-	}
+        if (renderer == nullptr)
+            throw SDLError();
 
-	
+        // Carga las texturas al inicio
+        for (size_t i = 0; i < textures.size(); i++) {
+            auto [name, nrows, ncols] = textureList[i];
+            textures[i] = new Texture(renderer, (string(imgBase) + name).c_str(), nrows, ncols);
+        }
 
-	// Crea las ranas en los nidos
-	for (int i = 0; i < NUM_NIDOS; ++i) {
-        HomedFrog* pF = new HomedFrog(this, textures[TextureName::FROG], Vector2D<float>(PRIMER_NIDO_X + i * DIST_NIDOS, PRIMER_NIDO_Y), i);
-        nidos[i] = false;
-        gameObjects.push_back(pF);
-	}
+        // Crea las ranas en los nidos
+        for (int i = 0; i < NUM_NIDOS; ++i) {
+            HomedFrog* pF = new HomedFrog(this, textures[TextureName::FROG], Vector2D<float>(PRIMER_NIDO_X + i * DIST_NIDOS, PRIMER_NIDO_Y), i);
+            nidos[i] = false;
+            gameObjects.push_back(pF);
+        }
 
-	infoBar = new InfoBar(this, textures[FROG], Vector2D(HUD_POS_X, HUD_POS_Y));
+        infoBar = new InfoBar(this, textures[FROG], Vector2D(HUD_POS_X, HUD_POS_Y));
 
-	// Configura que se pueden utilizar capas translúcidas
-	// SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+        // Configura que se pueden utilizar capas translúcidas
+        // SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+    }
+    catch (GameError& e) {
+        freeMemory();
+        throw e;
+    }
 }
 
 Game::~Game()
 {
+    freeMemory();
+}
 
+void Game::freeMemory()
+{
     for (SceneObject* go : gameObjects) delete go;
 
-	delete infoBar;
+    delete infoBar;
 
-	for (size_t i = 0; i < textures.size(); i++) {
-		delete textures[i];
-	}
+    for (Texture* t : textures) delete t;
 
-	SDL_DestroyRenderer(renderer);
-	SDL_DestroyWindow(window);
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
 }
 
 void

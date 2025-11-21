@@ -14,10 +14,10 @@ private:
 
 public:
 	HomedFrog(Game* game, Texture* texture, const Vector2D<float>& pos, int index);
-	void render() const;
+	void render() const override;
     // No lo hago const porque debe ser capaz de activarse si colisiona con la rana
     Collision checkCollision(SDL_FRect) override;
-	void update();
+	void update() override;
 	bool IsActive() const;
 
 private:

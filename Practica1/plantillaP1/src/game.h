@@ -111,6 +111,8 @@ public:
 	Game();
 	~Game();
 
+	void freeMemory();
+
 	// Obtiene una textura por su nombre
 	Texture* getTexture(TextureName name) const;
 

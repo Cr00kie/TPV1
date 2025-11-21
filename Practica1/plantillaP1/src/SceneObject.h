@@ -22,6 +22,6 @@ public:
     virtual ~SceneObject() = default;
     virtual Collision checkCollision(SDL_FRect other) = 0;
     void render() const override;
-    virtual void update() = 0;
+    virtual void update() override = 0;
 };
 

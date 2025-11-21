@@ -22,8 +22,8 @@ private:
 public:
 	TurtleGroup(Game* game, Texture* texture, const Vector2D<float>& pos, const Vector2D<float>& vel);
 	TurtleGroup(Game* game, Texture* texture, std::istream& is);
-	void render() const;
-	void update();
+	void render() const override;
+	void update() override;
 	Collision checkCollision(SDL_FRect) override;
 };
 
