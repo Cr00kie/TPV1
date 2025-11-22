@@ -2,7 +2,7 @@
 
 #include "vector2D.h"
 #include "GameObject.h"
-class Game;
+
 class Texture;
 class InfoBar : public GameObject
 {
@@ -10,7 +10,7 @@ class InfoBar : public GameObject
 	Vector2D<int> m_Pos;
     int m_nVidas;
 public:
-	InfoBar(Game*, Texture*, Vector2D<int>);
+	InfoBar(GameState*, Texture*, Vector2D<int>);
 	void render() const override;
     void update() override {}
     void updateVidas(int vidas) { m_nVidas = vidas; }

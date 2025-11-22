@@ -1,23 +1,27 @@
 #pragma once
-#include "game.h"
 #include "texture.h"
 #include "vector2D.h"
 #include "SceneObject.h"
+#include "PlayState.h"
 
-class Game;
+
+class SDLApplication;
 struct Collision;
 
 class Wasp : public SceneObject{
 private:
-    using Anchor = std::list<SceneObject*>::iterator; // no me funciona Game::Anchor
 	Vector2D<float> m_Vel;
-	float m_nTiempoVida;
-    Anchor m_Anchor;
+	float m_fTiempoVida;
+    GameState::Anchor m_GameStateAnchor;
+    PlayState::Anchor m_PlayStateAnchor;
 
 public:
-	Wasp(Game* game, Texture* texture, const Vector2D<float>& pos, const Vector2D<float>& vel, float tiempoVida);
+	Wasp(GameState* game, Texture* texture, const Vector2D<float>& pos, const Vector2D<float>& vel, float tiempoVida);
+    Wasp(GameState* game, Texture* texture, std::istream& is);
 	void update() override;
+    void render() const override;
 	Collision checkCollision(SDL_FRect) override;
 	bool isAlive() const;
-    void SetAnchor(Anchor anchor);
+    void SetPlayStateAnchor(PlayState::Anchor anchor);
+    void SetGameStateAnchor(GameState::Anchor anchor);
 };

@@ -1,6 +1,8 @@
 #include "HomedFrog.h"
+#include "Collision.h"
+#include "PlayState.h"
 
-HomedFrog::HomedFrog(Game* game, Texture* texture, const Vector2D<float>& pos, int index)
+HomedFrog::HomedFrog(PlayState* game, Texture* texture, const Vector2D<float>& pos, int index)
 	: SceneObject(game, texture, pos), m_bIsActive(false), m_nIndex(index)
 {}
 
@@ -37,5 +39,5 @@ bool HomedFrog::IsActive() const
 void HomedFrog::SetActive()
 {
 	m_bIsActive = true;
-    m_pGame->occupyNest(m_nIndex);
+    m_pPlayState->occupyNest(m_nIndex);
 }

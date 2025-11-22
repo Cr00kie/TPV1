@@ -3,11 +3,12 @@
 #include "vector2D.h"
 #include "SceneObject.h"
 #include "Collision.h"
+#include "EventHandler.h"
 
-class Game;
+class SDLApplication;
 struct Collision;
 
-class Frog : public SceneObject{
+class Frog : public SceneObject, public EventHandler{
 private:
 	static constexpr int STEP = 32;
 	static constexpr float ANIM_DURATION = 0.08f;
@@ -21,8 +22,8 @@ private:
 	float m_fAnimTime;
 
 public:
-	Frog(Game* game, Texture* texture, const Vector2D<float>& pos, int maxHealth = DEFAULT_MAX_HEALTH);
-	Frog(Game* game, Texture* texture, std::istream& is, int maxHealth = DEFAULT_MAX_HEALTH);
+	Frog(GameState* game, Texture* texture, const Vector2D<float>& pos, int maxHealth = DEFAULT_MAX_HEALTH);
+	Frog(GameState* game, Texture* texture, std::istream& is, int maxHealth = DEFAULT_MAX_HEALTH);
 	void render() const override;
 	void update() override;
 	void handleEvent(const SDL_Event&);

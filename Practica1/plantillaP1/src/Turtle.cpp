@@ -2,16 +2,18 @@
 
 #include "Log.h"
 #include "Collision.h"
+#include "PlayState.h"
+
 #include <string>
 using namespace std::string_literals;
 
-TurtleGroup::TurtleGroup(Game* game, Texture* texture, const Vector2D<float>& pos, const Vector2D<float>& vel)
-	: Platform(game, texture, pos, vel, Game::BAST * 2 + Game::WINDOW_WIDTH), m_fnextFrameTimer(ANIM_PER), m_nCurrFrame(0), m_bDive(false)
+TurtleGroup::TurtleGroup(GameState* game, Texture* texture, const Vector2D<float>& pos, const Vector2D<float>& vel)
+	: Platform(game, texture, pos, vel, PlayState::BAST * 2 + SDLApplication::WINDOW_WIDTH), m_fnextFrameTimer(ANIM_PER), m_nCurrFrame(0), m_bDive(false)
 {
 }
 
-TurtleGroup::TurtleGroup(Game* game, Texture* texture, std::istream& is)
-	: Platform(game, texture, is, Game::BAST * 2 + Game::WINDOW_WIDTH), m_fnextFrameTimer(ANIM_PER), m_nCurrFrame(0)
+TurtleGroup::TurtleGroup(GameState* game, Texture* texture, std::istream& is)
+	: Platform(game, texture, is, PlayState::BAST * 2 + SDLApplication::WINDOW_WIDTH), m_fnextFrameTimer(ANIM_PER), m_nCurrFrame(0)
 {
     is >> m_nGroupSize >> m_bDive;
 }
@@ -21,14 +23,14 @@ void TurtleGroup::render() const
     for (int i = 0; i < m_nGroupSize; ++i) {
 	    SDL_FRect pos = getBoundingBox();
         pos.x = pos.x + pos.w * i;
-	    m_pTexture->renderFrame(pos, 0, m_nCurrFrame, SDL_FLIP_HORIZONTAL);
+	    m_pTexture->renderFrame(pos, 0, m_nCurrFrame, m_Vel.getX()>0?SDL_FLIP_HORIZONTAL:SDL_FLIP_NONE);
     }
 }
 
 void TurtleGroup::update()
 {
     if (m_bDive) {
-        m_fnextFrameTimer -= Game::DELTA;
+        m_fnextFrameTimer -= SDLApplication::DELTA;
         if (m_fnextFrameTimer <= 0)
         {
             m_nCurrFrame = (m_nCurrFrame + 1) % m_pTexture->getNumColumns();

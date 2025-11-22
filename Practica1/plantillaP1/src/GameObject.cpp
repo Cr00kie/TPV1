@@ -1,3 +1,4 @@
 #include "GameObject.h"
+#include "GameState.h"
 
-GameObject::GameObject(Game* g) : m_pGame(g) {}
+GameObject::GameObject(GameState* g) : m_pGame(g) {}

@@ -1,8 +1,9 @@
 #include "InfoBar.h"
 #include "texture.h"
 #include <SDL3/SDL.h>
+#include "GameState.h"
 
-InfoBar::InfoBar(Game* g, Texture* t, Vector2D<int> pos) : GameObject(g), m_pTexture(t), m_Pos(pos), m_nVidas(0)
+InfoBar::InfoBar(GameState* g, Texture* t, Vector2D<int> pos) : GameObject(g), m_pTexture(t), m_Pos(pos), m_nVidas(0)
 {
 }
 

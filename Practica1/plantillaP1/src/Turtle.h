@@ -1,11 +1,11 @@
 #pragma once
-#include "game.h"
+#include "SDLApplication.h"
 #include "texture.h"
 #include "vector2D.h"
 #include "Platform.h"
 
 
-class Game;
+class SDLApplication;
 struct Collision;
 
 int constexpr ANIM_FPS = 4;
@@ -20,8 +20,8 @@ private:
     int m_nGroupSize;
 
 public:
-	TurtleGroup(Game* game, Texture* texture, const Vector2D<float>& pos, const Vector2D<float>& vel);
-	TurtleGroup(Game* game, Texture* texture, std::istream& is);
+	TurtleGroup(GameState* game, Texture* texture, const Vector2D<float>& pos, const Vector2D<float>& vel);
+	TurtleGroup(GameState* game, Texture* texture, std::istream& is);
 	void render() const override;
 	void update() override;
 	Collision checkCollision(SDL_FRect) override;

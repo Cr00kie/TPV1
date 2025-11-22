@@ -1,21 +1,25 @@
 #include "Vehicle.h"
-#include "Collision.h"
+
 #include <string>
+
+#include "Collision.h"
+#include "PlayState.h"
+
 using namespace std::string_literals;
 
-Vehicle::Vehicle(Game* game, Texture* texture, const Vector2D<float>& pos, const Vector2D<float>& vel)
-	: Crosser(game, texture, pos, vel, Game::BAST+Game::WINDOW_WIDTH)
+Vehicle::Vehicle(GameState* game, Texture* texture, const Vector2D<float>& pos, const Vector2D<float>& vel)
+	: Crosser(game, texture, pos, vel, PlayState::BAST +SDLApplication::WINDOW_WIDTH)
 {}
 
-Vehicle::Vehicle(Game * game, Texture * texture, std::istream & is)
-	: Crosser(game, texture, is, Game::BAST + Game::WINDOW_WIDTH + texture->getFrameWidth())
+Vehicle::Vehicle(GameState * game, Texture * texture, std::istream & is)
+	: Crosser(game, texture, is, PlayState::BAST + SDLApplication::WINDOW_WIDTH + texture->getFrameWidth())
 {
 	int type;
 	is >> type;
 
 	//if (type < 1 || type > 5) throw "Error: no se ha podido leer un coche"s;
 
-	m_pTexture = game->getTexture(Game::TextureName(game->CAR1 + (type - 1)));
+	m_pTexture = game->getSDLApplication()->getTexture(SDLApplication::TextureName(SDLApplication::CAR1 + (type - 1)));
 }
 
 Collision Vehicle::checkCollision(SDL_FRect other) {

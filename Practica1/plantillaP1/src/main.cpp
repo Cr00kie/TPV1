@@ -13,14 +13,14 @@
 // - [ ] Preguntarle a Ruben como hacemos que se muestre la caja de mensaje en main si no tenemos el *window
 
 
-#include "game.h"
+#include "SDLApplication.h"
 #include "GameError.h"
 
 
 int main(int argc, char* argv[])
 {
 	try {
-		Game().run();
+		SDLApplication().run();
 	}
 	catch (GameError& e) {
         SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error de juego", e.what(), nullptr);

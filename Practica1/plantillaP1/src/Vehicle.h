@@ -1,16 +1,16 @@
 #pragma once
-#include "game.h"
+#include "SDLApplication.h"
 #include "texture.h"
 #include "vector2D.h"
 #include "Crosser.h"
 
 
-class Game;
+class SDLApplication;
 struct Collision;
 
 class Vehicle : public Crosser {
 public:
-	Vehicle(Game* game, Texture* texture, const Vector2D<float>& pos, const Vector2D<float>& vel );
-	Vehicle(Game* game, Texture* texture, std::istream& is);
+	Vehicle(GameState* game, Texture* texture, const Vector2D<float>& pos, const Vector2D<float>& vel );
+	Vehicle(GameState* game, Texture* texture, std::istream& is);
 	Collision checkCollision(SDL_FRect);
 };
