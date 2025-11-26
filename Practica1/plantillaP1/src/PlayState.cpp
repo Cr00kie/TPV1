@@ -41,12 +41,6 @@ void PlayState::checkVictory()
     if (nFreeNests <= 0) endGame(false);
 }
 
-
-
-void PlayState::freeMemory()
-{
-}
-
 PlayState::PlayState(SDLApplication* game, const std::string& mapName)
     : GameState(game),
     rndGenerator(time(0)),
@@ -69,21 +63,12 @@ PlayState::PlayState(SDLApplication* game, const std::string& mapName)
         infoBar = new InfoBar(this, m_pGame->getTexture(SDLApplication::FROG), Vector2D(HUD_POS_X, HUD_POS_Y));
         GameState::addObject(infoBar);
 
-        // Configura que se pueden utilizar capas translúcidas
-        // SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-
         loadMap(currentMap);
     }
     catch (GameError& e)
     {
-        freeMemory();
         throw e;
     }
-}
-
-PlayState::~PlayState()
-{
-    freeMemory();
 }
 
 Collision PlayState::checkCollision(const SDL_FRect& rect) const
@@ -194,8 +179,8 @@ void PlayState::occupyNest(int index)
 
 PlayState::Anchor PlayState::addObject(SceneObject* so)
 {
-    sceneObjects.push_back(so);
-    return --sceneObjects.end();
+    sceneObjects.push_front(so);
+    return sceneObjects.begin();
 }
 
 void PlayState::removeObject(PlayState::Anchor it)
@@ -208,10 +193,17 @@ void PlayState::update()
     //Crea la avispa
     CreateRandomWasp();
 
-    infoBar->updateVidas(frog->getFrogHealth());
+    UpdateHUD();
 
     GameState::update();
+
     checkVictory();
+}
+
+void PlayState::UpdateHUD()
+{
+    infoBar->updateVidas(frog->getFrogHealth());
+    infoBar->updateTimer(frog->getFrogLiveTime());
 }
 
 void PlayState::handleEvent(const SDL_Event& e)

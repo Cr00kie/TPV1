@@ -12,11 +12,11 @@ constexpr const char* const SAVE_FILE = "config.txt";
 
 MainMenuState::MainMenuState(SDLApplication* game) : GameState(game), m_nCurrentSelectedMap(0)
 {
+    addObject(new Label(this, m_pGame->getTexture(SDLApplication::MENU_BACKGROUND), { 0,0 }));
+
     std::ifstream configFile(SAVE_FILE);
     if (configFile.is_open())
         configFile >> m_nCurrentSelectedMap;
-    
-    addObject(new Label(this, m_pGame->getTexture(SDLApplication::MENU_BACKGROUND), { 0,0 }));
 
     addObject(new Label(this, m_pGame->getTexture(SDLApplication::ELIGE_UN_MAPA), {
           (float)((SDLApplication::WINDOW_WIDTH / 2) - m_pGame->getTexture(SDLApplication::ELIGE_UN_MAPA)->getFrameWidth()/2),
@@ -100,6 +100,7 @@ MainMenuState::handleEvent(const SDL_Event& e)
             break;
         case SDLK_RETURN:
             m_pGame->pushState(new PlayState(m_pGame, m_maps[m_nCurrentSelectedMap]));
+            break;
         }
     }
 }

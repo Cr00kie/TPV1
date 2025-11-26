@@ -58,10 +58,14 @@ constexpr array<TextureSpec, SDLApplication::NUM_TEXTURES> textureList{
     {"./texts/VOLVER AL MENÚ.png"},
 };
 
-SDLApplication::SDLApplication() : m_bExit(false)
+SDLApplication::SDLApplication() :
+    m_bExit(false)
 {
 	// Carga SDL y sus bibliotecas auxiliares
-	SDL_Init(SDL_INIT_VIDEO);
+    if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO))
+    {
+        throw SDLError();
+    }
 
 	window = SDL_CreateWindow(WINDOW_TITLE,
 	                          WINDOW_WIDTH,
@@ -71,6 +75,9 @@ SDLApplication::SDLApplication() : m_bExit(false)
     textures.fill(nullptr);
 
     try {
+        soundManager.load();
+        soundManager.play(SoundManager::JUMP);
+
         if (window == nullptr)
             throw SDLError();
 
@@ -99,6 +106,8 @@ SDLApplication::~SDLApplication()
 
 void SDLApplication::freeMemory()
 {
+    soundManager.unload();
+
     for (Texture* t : textures) delete t;
 
     SDL_DestroyRenderer(renderer);

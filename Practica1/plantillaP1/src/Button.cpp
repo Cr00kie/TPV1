@@ -4,18 +4,15 @@
 
 void Button::handleEvent(const SDL_Event& event)
 {
-    if(m_bIsActive)
+    if (event.type == SDL_EVENT_MOUSE_MOTION)
     {
-        if (event.type == SDL_EVENT_MOUSE_MOTION)
-        {
-            SDL_FPoint mousePos = { event.button.x, event.button.y };
-            SDL_FRect hitDetectionRectangle(m_Pos.getX(), m_Pos.getY(), m_pTexture->getFrameWidth(), m_pTexture->getFrameHeight());
-            m_bHovered = SDL_PointInRectFloat(&mousePos, &hitDetectionRectangle);
-        }
-        else if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN && m_bHovered)
-        {
-            m_onClick();
-        }
+        SDL_FPoint mousePos = { event.button.x, event.button.y };
+        SDL_FRect hitDetectionRectangle(m_Pos.getX(), m_Pos.getY(), m_pTexture->getFrameWidth(), m_pTexture->getFrameHeight());
+        m_bHovered = SDL_PointInRectFloat(&mousePos, &hitDetectionRectangle);
+    }
+    else if (m_bIsActive && event.type == SDL_EVENT_MOUSE_BUTTON_DOWN && m_bHovered)
+    {
+        m_onClick();
     }
 }
 

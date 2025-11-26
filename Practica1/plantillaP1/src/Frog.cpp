@@ -7,12 +7,15 @@
 Frog::Frog(GameState* game, Texture* texture, const Vector2D<float>& pos, int maxHelath)
 	: SceneObject(game, texture, pos), m_StartPos(pos), 
 	  m_nHealth(maxHelath), m_LastDir(0,0), 
-	  m_bMove(false), m_fAnimTime(0) {}
+	  m_bMove(false), m_fAnimTime(0),
+      m_fLiveTime(TIMER)
+{}
 
 Frog::Frog(GameState* game, Texture* texture, std::istream& is, int maxHealth)
 	: SceneObject(game, texture, is, texture->getFrameWidth() - COLLIDER_REDUCTION, texture->getFrameHeight() - COLLIDER_REDUCTION),
 	  m_nHealth(maxHealth), m_LastDir(0,0), 
-	  m_bMove(false), m_fAnimTime(0)
+	  m_bMove(false), m_fAnimTime(0),
+      m_fLiveTime(TIMER)
 {
 	m_StartPos = m_Pos;
 }
@@ -37,6 +40,9 @@ void Frog::update() {
 		if (nextPos.getY() < 0) m_fAnimTime = 0;
 		else if (nextPos.getY() > PlayState::HUD_POS_Y-STEP) m_fAnimTime = 0;
 
+        //Play sound
+        m_pGame->getSDLApplication()->getSoundManager().play(SoundManager::JUMP);
+
 		m_bMove = false;
 	}
 
@@ -56,6 +62,8 @@ void Frog::update() {
 
 	// Animacion
 	m_fAnimTime -= SDLApplication::DELTA;
+    m_fLiveTime -= SDLApplication::DELTA;
+    if (m_fLiveTime <= 0) die();
 
     checkCollisions();
 }
@@ -88,7 +96,7 @@ void Frog::checkCollisions()
         m_Vel = colData.vel;
         break;
     case Collision::HOME:
-        resetPos();
+        resetFrog();
         break;
     case Collision::NONE:
         // Si cae al agua muere
@@ -103,17 +111,25 @@ int Frog::getFrogHealth() const
 	return m_nHealth;
 }
 
+float Frog::getFrogLiveTime() const
+{
+    return m_fLiveTime;
+}
+
 void Frog::die()
 {
-	resetPos();
+	resetFrog();
 	--m_nHealth;
 	if (m_nHealth <= 0) m_pPlayState->endGame(true);
 }
 
-void Frog::resetPos()
+void Frog::resetFrog()
 {
 	m_Pos = m_StartPos;
 	m_Vel = m_Vel * 0;
+    m_fAnimTime = 0;
+    m_fLiveTime = TIMER;
+    m_bMove = false;
 }
 
 SDL_FRect Frog::getBoundingBox() const { return SDL_FRect(m_Pos.getX()+COLLIDER_REDUCTION, m_Pos.getY()+COLLIDER_REDUCTION, m_nWidth-COLLIDER_REDUCTION*2, m_nHeight-COLLIDER_REDUCTION*2); }

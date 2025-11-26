@@ -8,6 +8,7 @@
 #include <random>
 #include "gameStateMachine.h"
 #include "texture.h"
+#include "SoundManager.h"
 
 /**
  * Clase principal del juego.
@@ -68,6 +69,7 @@ private:
 	SDL_Window* window;
 	SDL_Renderer* renderer;
 	std::array<Texture*, NUM_TEXTURES> textures;
+    SoundManager soundManager;
     bool m_bExit;
     void handleEvents();
 
@@ -81,6 +83,7 @@ public:
 	Texture* getTexture(TextureName name) const;
     SDL_Renderer* getRenderer() const;
     SDL_Window* getWindow() const;
+    const SoundManager& getSoundManager() const;
 
 	// Ejecuta el bucle principal del juego
 	void run();
@@ -102,5 +105,11 @@ inline SDL_Window* SDLApplication::getWindow() const
 {
     return window;
 }
+
+inline const SoundManager& SDLApplication::getSoundManager() const
+{
+    return soundManager;
+}
+
 
 #endif // GAME_H

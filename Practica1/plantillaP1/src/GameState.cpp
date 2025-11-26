@@ -12,7 +12,8 @@ GameState::~GameState()
 void
 GameState::render() const
 {
-    for (GameObject* go : gameObjects) go->render();
+    for (auto it = gameObjects.rbegin(); it != gameObjects.rend(); ++it)
+        (*it)->render();
 }
 
 void
@@ -36,8 +37,8 @@ void GameState::addEventListener(EventHandler* handler)
 
 GameState::Anchor GameState::addObject(GameObject* go)
 {
-    gameObjects.push_back(go);
-    return --gameObjects.end();
+    gameObjects.push_front(go);
+    return gameObjects.begin();
 }
 
 void GameState::removeObject(GameState::Anchor it)

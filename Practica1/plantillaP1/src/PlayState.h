@@ -52,13 +52,8 @@ private:
 
     InfoBar* infoBar;
 
-    void restartGame();
-
-    void freeMemory();
-
 public:
     PlayState(SDLApplication*, const std::string&);
-    ~PlayState();
 
     // Comprueba si hay algún objeto colocado en ese rectángulo
     Collision checkCollision(const SDL_FRect& rect) const;
@@ -86,6 +81,7 @@ public:
     void removeObject(PlayState::Anchor);
 
     void update() override;
+    void UpdateHUD();
     void handleEvent(const SDL_Event&) override;
     void CreateRandomWasp();
 
