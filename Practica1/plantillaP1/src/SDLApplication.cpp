@@ -84,6 +84,7 @@ SDLApplication::SDLApplication() : m_bExit(false)
             auto [name, nrows, ncols] = textureList[i];
             textures[i] = new Texture(renderer, (string(imgBase) + name).c_str(), nrows, ncols);
         }
+        SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     }
     catch (GameError& e) {
         freeMemory();
@@ -114,7 +115,7 @@ SDLApplication::run()
         Uint64 frameStart = SDL_GetTicks();
 		handleEvents();
 		update();
-		render();
+        render();
         Uint64 delta = SDL_GetTicks() - frameStart;
 
         if(delta < DELTA_MS)
@@ -122,6 +123,13 @@ SDLApplication::run()
             SDL_Delay((int)(DELTA_MS-delta));
         }
 	}
+}
+
+void SDLApplication::render()
+{
+    SDL_RenderClear(renderer);
+    GameStateMachine::render();
+    SDL_RenderPresent(renderer);
 }
 
 void

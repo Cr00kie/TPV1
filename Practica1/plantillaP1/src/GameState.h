@@ -13,11 +13,11 @@ class GameState
 {
     using DelayedCallback = std::function<void()>;
 
-    std::list<GameObject*> gameObjects;
     std::list<EventHandler*> eventHandlers;
     std::list<DelayedCallback> delayedCallbacks;
 
 protected:
+    std::list<GameObject*> gameObjects;
     SDLApplication* m_pGame;
 
 public:

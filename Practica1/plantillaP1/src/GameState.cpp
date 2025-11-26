@@ -12,11 +12,7 @@ GameState::~GameState()
 void
 GameState::render() const
 {
-    SDL_RenderClear(m_pGame->getRenderer());
-
     for (GameObject* go : gameObjects) go->render();
-
-    SDL_RenderPresent(m_pGame->getRenderer());
 }
 
 void

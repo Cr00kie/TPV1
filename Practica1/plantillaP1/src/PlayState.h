@@ -24,7 +24,7 @@ public:
     static constexpr float DIST_NIDOS = 96.f;
     // Posicion del primer nido
     static constexpr float PRIMER_NIDO_X = 14.f;
-    static constexpr float PRIMER_NIDO_Y = 21.f;
+    static constexpr float PRIMER_NIDO_Y = 15.f;
     // Tiempo de vida de avispa
     static constexpr int MIN_WASP_ALIVE = 4;
     static constexpr int MAX_WASP_ALIVE = 7;
@@ -88,4 +88,6 @@ public:
     void update() override;
     void handleEvent(const SDL_Event&) override;
     void CreateRandomWasp();
+
+    const std::string& getMapName() const;
 };

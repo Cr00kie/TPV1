@@ -219,7 +219,7 @@ void PlayState::handleEvent(const SDL_Event& e)
     GameState::handleEvent(e);
     if (e.type == SDL_EVENT_KEY_DOWN)
     {
-        if (e.key.key == SDLK_ESCAPE) m_pGame->pushState(new PauseState(m_pGame, currentMap));
+        if (e.key.key == SDLK_ESCAPE) m_pGame->pushState(new PauseState(m_pGame, this));
     }
 }
 
@@ -237,4 +237,9 @@ void PlayState::CreateRandomWasp()
         timeNextWasp = (float)getRandomRange(MAX_WASP_ALIVE + MIN_WASP_DEAD, MAX_WASP_ALIVE + MAX_WASP_DEAD);
     }
     timeNextWasp -= SDLApplication::DELTA;
+}
+
+const std::string& PlayState::getMapName() const
+{
+    return currentMap;
 }

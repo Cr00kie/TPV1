@@ -84,6 +84,7 @@ public:
 
 	// Ejecuta el bucle principal del juego
 	void run();
+    void render();
 };
 
 inline Texture*

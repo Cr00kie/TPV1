@@ -13,9 +13,9 @@ constexpr const char* const SAVE_FILE = "config.txt";
 MainMenuState::MainMenuState(SDLApplication* game) : GameState(game), m_nCurrentSelectedMap(0)
 {
     std::ifstream configFile(SAVE_FILE);
-    if(configFile.is_open())
+    if (configFile.is_open())
         configFile >> m_nCurrentSelectedMap;
-
+    
     addObject(new Label(this, m_pGame->getTexture(SDLApplication::MENU_BACKGROUND), { 0,0 }));
 
     addObject(new Label(this, m_pGame->getTexture(SDLApplication::ELIGE_UN_MAPA), {
@@ -30,6 +30,22 @@ MainMenuState::MainMenuState(SDLApplication* game) : GameState(game), m_nCurrent
                     );
     addObject(exit);
     exit->connect([this]() { m_pGame->popState(); });
+
+    m_pRightArrow = new Button(this, m_pGame->getTexture(SDLApplication::RIGHT), {
+                          (float)(350 - m_pGame->getTexture(SDLApplication::RIGHT)->getFrameWidth() / 2),
+                          (float)(300 - m_pGame->getTexture(SDLApplication::RIGHT)->getFrameHeight())
+        }
+    );
+    addObject(m_pRightArrow);
+    m_pRightArrow->connect([this]() { moveRight(); });
+
+    m_pLeftArrow = new Button(this, m_pGame->getTexture(SDLApplication::LEFT), {
+                          (float)(100 - m_pGame->getTexture(SDLApplication::LEFT)->getFrameWidth() / 2),
+                          (float)(300 - m_pGame->getTexture(SDLApplication::LEFT)->getFrameHeight())
+        }
+    );
+    addObject(m_pLeftArrow);
+    m_pLeftArrow->connect([this]() { moveLeft(); });
 
     std::unordered_map<std::string, SDLApplication::TextureName> mapNameTextures({
         {"Avispado", SDLApplication::AVISPADO},
@@ -58,6 +74,8 @@ MainMenuState::MainMenuState(SDLApplication* game) : GameState(game), m_nCurrent
         i++;
     }
     m_mapsButtons[m_nCurrentSelectedMap]->setActive(true);
+
+    updateArrows();
 }
 
 MainMenuState::~MainMenuState()
@@ -75,23 +93,42 @@ MainMenuState::handleEvent(const SDL_Event& e)
         switch (e.key.key)
         {
         case SDLK_RIGHT:
-            if (m_nCurrentSelectedMap + 1 < m_mapsButtons.size())
-            {
-                m_mapsButtons[m_nCurrentSelectedMap]->setActive(false);
-                ++m_nCurrentSelectedMap;
-                m_mapsButtons[m_nCurrentSelectedMap]->setActive(true);
-            }
+            moveRight();
             break;
         case SDLK_LEFT:
-            if (m_nCurrentSelectedMap - 1 >= 0)
-            {
-                m_mapsButtons[m_nCurrentSelectedMap]->setActive(false);
-                --m_nCurrentSelectedMap;
-                m_mapsButtons[m_nCurrentSelectedMap]->setActive(true);
-            }
+            moveLeft();
             break;
         case SDLK_RETURN:
             m_pGame->pushState(new PlayState(m_pGame, m_maps[m_nCurrentSelectedMap]));
         }
     }
+}
+
+void MainMenuState::moveRight() {
+    if (m_nCurrentSelectedMap + 1 < m_mapsButtons.size())
+    {
+        m_mapsButtons[m_nCurrentSelectedMap]->setActive(false);
+        ++m_nCurrentSelectedMap;
+        m_mapsButtons[m_nCurrentSelectedMap]->setActive(true);
+    }
+
+    updateArrows();
+}
+
+void MainMenuState::moveLeft()
+{
+    if (m_nCurrentSelectedMap - 1 >= 0)
+    {
+        m_mapsButtons[m_nCurrentSelectedMap]->setActive(false);
+        --m_nCurrentSelectedMap;
+        m_mapsButtons[m_nCurrentSelectedMap]->setActive(true);
+    }
+
+    updateArrows();
+}
+
+void MainMenuState::updateArrows()
+{
+    m_pRightArrow->setActive(m_nCurrentSelectedMap + 1 < m_mapsButtons.size());
+    m_pLeftArrow->setActive(m_nCurrentSelectedMap - 1 >= 0);
 }

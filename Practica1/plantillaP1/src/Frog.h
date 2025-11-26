@@ -11,7 +11,7 @@ struct Collision;
 class Frog : public SceneObject, public EventHandler{
 private:
 	static constexpr int STEP = 32;
-	static constexpr float ANIM_DURATION = 0.08f;
+	static constexpr float ANIM_DURATION = 0.1f;
 	static constexpr int DEFAULT_MAX_HEALTH = 3;
 	static constexpr int COLLIDER_REDUCTION = 5;
 	Vector2D<float> m_StartPos;

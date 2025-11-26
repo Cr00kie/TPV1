@@ -27,19 +27,23 @@ void Frog::update() {
 	if (m_bMove) {
 		// Reinicia animacion
 		m_fAnimTime = ANIM_DURATION;
-		
-		// Actualiza posicion
-		m_Pos = m_Pos + (m_LastDir * STEP);
+
+        Vector2D<float> nextPos = m_Pos + (m_LastDir * STEP);
 
 		// Comprueba que la rana este en los limites
-		if (m_Pos.getX() < 0) m_Pos.setX(m_Pos.getX() + STEP);
-		else if (m_Pos.getX() > SDLApplication::WINDOW_WIDTH-STEP) m_Pos.setX(m_Pos.getX() - STEP);
+        if (nextPos.getX() < 0) m_fAnimTime = 0;
+		else if (nextPos.getX() > SDLApplication::WINDOW_WIDTH-STEP) m_fAnimTime = 0;
 		
-		if (m_Pos.getY() < 0) m_Pos.setY(m_Pos.getY() + STEP);
-		else if (m_Pos.getY() > PlayState::HUD_POS_Y-STEP) m_Pos.setY(m_Pos.getY() - STEP);
+		if (nextPos.getY() < 0) m_fAnimTime = 0;
+		else if (nextPos.getY() > PlayState::HUD_POS_Y-STEP) m_fAnimTime = 0;
 
 		m_bMove = false;
 	}
+
+    if (m_fAnimTime > 0) {
+        // Actualiza posicion
+        m_Pos = m_Pos + (m_LastDir * (STEP / ANIM_DURATION)*SDLApplication::DELTA);
+    }
 
 	// Actualiza posicion por fisica
 	m_Pos = m_Pos + (m_Vel * SDLApplication::DELTA);
@@ -58,7 +62,7 @@ void Frog::update() {
 
 void Frog::handleEvent(const SDL_Event& event)
 {
-	if(event.type == SDL_EVENT_KEY_DOWN){
+	if(event.type == SDL_EVENT_KEY_DOWN && m_fAnimTime <= 0){
 		switch (event.key.key) {
 			case SDLK_A: m_LastDir.setX(-1); m_LastDir.setY(0); m_bMove = true; break;
 			case SDLK_W: m_LastDir.setX(0); m_LastDir.setY(-1); m_bMove = true; break;
@@ -88,7 +92,7 @@ void Frog::checkCollisions()
         break;
     case Collision::NONE:
         // Si cae al agua muere
-        if (m_Pos.getY() < PlayState::RIVER_LOW)
+        if (m_Pos.getY() < PlayState::RIVER_LOW - getBoundingBox().h)
             die();
         m_Vel = Vector2D<float>(0, 0);
     }

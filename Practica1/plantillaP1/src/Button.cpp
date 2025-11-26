@@ -38,7 +38,7 @@ void Button::render() const
         SDL_FRect target(m_Pos.getX(), m_Pos.getY(), m_pTexture->getFrameWidth(), m_pTexture->getFrameHeight());
         if (m_bHovered)
             m_pTexture->render(target, m_hoveredColor);
-        else m_pTexture->render(target, m_baseColor);
+        else m_pTexture->render(target, m_textColor);
     }
 }
 

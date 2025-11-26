@@ -3,7 +3,8 @@
 #include "Button.h"
 #include "PlayState.h"
 
-PauseState::PauseState(SDLApplication* g, const std::string& mapName) : GameState(g)
+PauseState::PauseState(SDLApplication* g, PlayState* playState)
+    : GameState(g), m_pPlayState(playState)
 {
     Button* contin = new Button(this, m_pGame->getTexture(SDLApplication::CONTINUAR), {
                           (float)((SDLApplication::WINDOW_WIDTH / 2) - m_pGame->getTexture(SDLApplication::CONTINUAR)->getFrameWidth() / 2),
@@ -19,7 +20,7 @@ PauseState::PauseState(SDLApplication* g, const std::string& mapName) : GameStat
         }
     );
     addObject(restart);
-    restart->connect([this, mapName]() { restartGame(mapName); });
+    restart->connect([this]() { restartGame(m_pPlayState->getMapName()); });
 
     Button* volver = new Button(this, m_pGame->getTexture(SDLApplication::VOLVER_AL_MENU), {
                           (float)((SDLApplication::WINDOW_WIDTH / 2) - m_pGame->getTexture(SDLApplication::VOLVER_AL_MENU)->getFrameWidth() / 2),
@@ -59,4 +60,14 @@ void PauseState::restartGame(const std::string& mapName)
         m_pGame->popState();
         m_pGame->replaceState(new PlayState(m_pGame, mapName));
     }
+}
+
+void PauseState::render() const
+{
+    m_pPlayState->render();
+
+    SDL_SetRenderDrawColor(m_pGame->getRenderer(), 0,0,0,128);
+    SDL_FRect overlay = { 0,0,SDLApplication::WINDOW_WIDTH,SDLApplication::WINDOW_HEIGHT };
+    SDL_RenderFillRect(m_pGame->getRenderer(), &overlay);
+    for (GameObject* go : gameObjects) go->render();
 }
