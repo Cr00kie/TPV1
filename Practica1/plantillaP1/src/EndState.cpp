@@ -30,4 +30,6 @@ EndState::EndState(SDLApplication* g, bool victory)
 
         }, (victory ? victoryColor:loseColor));
     addObject(title);
+
+    m_pGame->getSoundManager().play((victory ? SoundManager::WIN : SoundManager::GAMEOVER));
 }

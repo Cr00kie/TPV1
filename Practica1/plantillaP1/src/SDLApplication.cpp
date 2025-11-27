@@ -76,7 +76,6 @@ SDLApplication::SDLApplication() :
 
     try {
         soundManager.load();
-        soundManager.play(SoundManager::JUMP);
 
         if (window == nullptr)
             throw SDLError();

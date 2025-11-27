@@ -83,7 +83,7 @@ public:
 	Texture* getTexture(TextureName name) const;
     SDL_Renderer* getRenderer() const;
     SDL_Window* getWindow() const;
-    const SoundManager& getSoundManager() const;
+    SoundManager& getSoundManager();
 
 	// Ejecuta el bucle principal del juego
 	void run();
@@ -106,7 +106,7 @@ inline SDL_Window* SDLApplication::getWindow() const
     return window;
 }
 
-inline const SoundManager& SDLApplication::getSoundManager() const
+inline SoundManager& SDLApplication::getSoundManager()
 {
     return soundManager;
 }

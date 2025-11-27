@@ -1,6 +1,7 @@
 #include "HomedFrog.h"
 #include "Collision.h"
 #include "PlayState.h"
+#include "SDLApplication.h"
 
 HomedFrog::HomedFrog(PlayState* game, Texture* texture, const Vector2D<float>& pos, int index)
 	: SceneObject(game, texture, pos), m_bIsActive(false), m_nIndex(index)
@@ -40,4 +41,5 @@ void HomedFrog::SetActive()
 {
 	m_bIsActive = true;
     m_pPlayState->occupyNest(m_nIndex);
+    m_pGame->getSDLApplication()->getSoundManager().play(SoundManager::NEST);
 }

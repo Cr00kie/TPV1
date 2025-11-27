@@ -1,6 +1,7 @@
 #include "Button.h"
 #include "GameState.h"
 #include "SDL3/SDL.h"
+#include "SDLApplication.h"
 
 void Button::handleEvent(const SDL_Event& event)
 {
@@ -8,7 +9,13 @@ void Button::handleEvent(const SDL_Event& event)
     {
         SDL_FPoint mousePos = { event.button.x, event.button.y };
         SDL_FRect hitDetectionRectangle(m_Pos.getX(), m_Pos.getY(), m_pTexture->getFrameWidth(), m_pTexture->getFrameHeight());
-        m_bHovered = SDL_PointInRectFloat(&mousePos, &hitDetectionRectangle);
+        if (SDL_PointInRectFloat(&mousePos, &hitDetectionRectangle))
+        {
+            if (m_bIsActive && !m_bHovered)
+                m_pGame->getSDLApplication()->getSoundManager().play(SoundManager::HOVER);
+            m_bHovered = true;
+        }
+        else m_bHovered = false;
     }
     else if (m_bIsActive && event.type == SDL_EVENT_MOUSE_BUTTON_DOWN && m_bHovered)
     {

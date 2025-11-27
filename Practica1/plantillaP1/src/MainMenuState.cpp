@@ -66,7 +66,10 @@ MainMenuState::MainMenuState(SDLApplication* game) : GameState(game), m_nCurrent
                           (float)(300 - m_pGame->getTexture(mapNameTextures[mapName])->getFrameHeight())
             }
         );
-        levelButton->connect([this]() { m_pGame->pushState(new PlayState(m_pGame, m_maps[m_nCurrentSelectedMap])); });
+        levelButton->connect([this]() {
+            m_pGame->pushState(new PlayState(m_pGame, m_maps[m_nCurrentSelectedMap]));
+            m_pGame->getSoundManager().play(SoundManager::GAMESTART);
+            });
         levelButton->setActive(false);
         addObject(levelButton);
         m_mapsButtons.push_back(levelButton);
