@@ -38,7 +38,7 @@ PauseState::PauseState(SDLApplication* g, PlayState* playState)
     addObject(exit);
     exit->connect([this]() { m_pGame->popState(); m_pGame->popState(); m_pGame->popState();});
 
-    m_pGame->getSoundManager().play(SoundManager::PAUSE);
+    //m_pGame->getSoundManager().play(SoundManager::PAUSE);
 }
 
 void PauseState::restartGame(const std::string& mapName)
@@ -61,7 +61,7 @@ void PauseState::restartGame(const std::string& mapName)
     {
         m_pGame->popState();
         m_pGame->replaceState(new PlayState(m_pGame, mapName));
-        m_pGame->getSoundManager().play(SoundManager::GAMESTART);
+        //m_pGame->getSoundManager().play(SoundManager::GAMESTART);
     }
 }
 

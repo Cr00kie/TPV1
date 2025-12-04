@@ -41,5 +41,5 @@ void HomedFrog::SetActive()
 {
 	m_bIsActive = true;
     m_pPlayState->occupyNest(m_nIndex);
-    m_pGame->getSDLApplication()->getSoundManager().play(SoundManager::NEST);
+    //m_pGame->getSDLApplication()->getSoundManager().play(SoundManager::NEST);
 }

@@ -6,7 +6,7 @@
 class SoundManager
 {
 public:
-    enum SoundName { JUMP, GAMESTART, PAUSE, HOVER, NEST, GAMEOVER, WIN, NUM_SOUNDS };
+    enum SoundName { JUMP, /*GAMESTART, PAUSE, HOVER, NEST, GAMEOVER, WIN,*/ NUM_SOUNDS };
     void load();
     void unload();
     ~SoundManager();

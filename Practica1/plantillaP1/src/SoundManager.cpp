@@ -7,12 +7,12 @@ constexpr const char* const soundBase = "../assets/sounds/";
 
 constexpr std::array<const char*, SoundManager::NUM_SOUNDS> audiosList{
     "jump.wav",
-    "game-start.wav",
+    /*"game-start.wav",
     "pause.wav",
     "hover.wav",
     "victory.wav",
     "game-over.wav",
-    "win.wav"
+    "win.wav"*/
 };
 
 void SoundManager::load()

@@ -11,8 +11,8 @@ void Button::handleEvent(const SDL_Event& event)
         SDL_FRect hitDetectionRectangle(m_Pos.getX(), m_Pos.getY(), m_pTexture->getFrameWidth(), m_pTexture->getFrameHeight());
         if (SDL_PointInRectFloat(&mousePos, &hitDetectionRectangle))
         {
-            if (m_bIsActive && !m_bHovered)
-                m_pGame->getSDLApplication()->getSoundManager().play(SoundManager::HOVER);
+            //if (m_bIsActive && !m_bHovered)
+                //m_pGame->getSDLApplication()->getSoundManager().play(SoundManager::HOVER);
             m_bHovered = true;
         }
         else m_bHovered = false;

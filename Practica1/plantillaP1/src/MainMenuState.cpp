@@ -67,7 +67,7 @@ MainMenuState::MainMenuState(SDLApplication* game) : GameState(game), m_nCurrent
         );
         levelButton->connect([this]() {
             m_pGame->pushState(new PlayState(m_pGame, m_maps[m_nCurrentSelectedMap]));
-            m_pGame->getSoundManager().play(SoundManager::GAMESTART);
+            //m_pGame->getSoundManager().play(SoundManager::GAMESTART);
             });
         levelButton->setActive(false);
         addObject(levelButton);
