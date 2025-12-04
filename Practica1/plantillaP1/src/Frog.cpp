@@ -79,10 +79,10 @@ void Frog::handleEvent(const SDL_Event& event)
 {
 	if(event.type == SDL_EVENT_KEY_DOWN && m_fAnimTime <= 0){
 		switch (event.key.key) {
-			case SDLK_A: m_LastDir.setX(-1); m_LastDir.setY(0); m_bMove = true; break;
-			case SDLK_W: m_LastDir.setX(0); m_LastDir.setY(-1); m_bMove = true; break;
-			case SDLK_S: m_LastDir.setX(0); m_LastDir.setY(1); m_bMove = true; break;
-			case SDLK_D: m_LastDir.setX(1); m_LastDir.setY(0); m_bMove = true; break;
+            case SDLK_A: case SDLK_LEFT: m_LastDir.setX(-1); m_LastDir.setY(0); m_bMove = true; break;
+			case SDLK_W: case SDLK_UP: m_LastDir.setX(0); m_LastDir.setY(-1); m_bMove = true; break;
+			case SDLK_S: case SDLK_DOWN: m_LastDir.setX(0); m_LastDir.setY(1); m_bMove = true; break;
+			case SDLK_D: case SDLK_RIGHT: m_LastDir.setX(1); m_LastDir.setY(0); m_bMove = true; break;
 		}	
 	}
 }

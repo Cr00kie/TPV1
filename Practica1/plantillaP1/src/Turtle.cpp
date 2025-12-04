@@ -29,13 +29,11 @@ void TurtleGroup::render() const
 
 void TurtleGroup::update()
 {
-    if (m_bDive) {
-        m_fnextFrameTimer -= SDLApplication::DELTA;
-        if (m_fnextFrameTimer <= 0)
-        {
-            m_nCurrFrame = (m_nCurrFrame + 1) % m_pTexture->getNumColumns();
-            m_fnextFrameTimer = ANIM_PER;
-        }
+    m_fnextFrameTimer -= SDLApplication::DELTA;
+    if (m_fnextFrameTimer <= 0)
+    {
+        m_nCurrFrame = (m_nCurrFrame + 1) % (m_bDive?m_pTexture->getNumColumns():2);
+        m_fnextFrameTimer = ANIM_PER;
     }
 
     Platform::update();
