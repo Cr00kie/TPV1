@@ -4,11 +4,11 @@
 #include <fstream>
 #include <numbers>
 
-Wasp::Wasp(GameState* game, Texture* texture, const Vector2D<float>& pos, const Vector2D<float>& vel, float tiempoVida)
+Wasp::Wasp(PlayState* game, Texture* texture, const Vector2D<float>& pos, const Vector2D<float>& vel, float tiempoVida)
 	: SceneObject(game, texture, pos), m_Vel(vel), m_fTiempoVida(tiempoVida)
 {}
 
-Wasp::Wasp(GameState * game, Texture * texture, std::istream & is)
+Wasp::Wasp(PlayState* game, Texture * texture, std::istream & is)
     : SceneObject(game, texture, is)
 {
     float vX, vY;

@@ -12,8 +12,8 @@ protected:
     float m_fBackjump;
 
 public:
-    Crosser(GameState* g, Texture* t, Vector2D<float> p, Vector2D<float> v, float b);
-    Crosser(GameState* g, Texture* t, std::istream&, float b);
+    Crosser(PlayState* g, Texture* t, Vector2D<float> p, Vector2D<float> v, float b);
+    Crosser(PlayState* g, Texture* t, std::istream&, float b);
     virtual ~Crosser() = default;
     void update() override;
 };

@@ -20,8 +20,8 @@ private:
     int m_nGroupSize;
 
 public:
-	TurtleGroup(GameState* game, Texture* texture, const Vector2D<float>& pos, const Vector2D<float>& vel);
-	TurtleGroup(GameState* game, Texture* texture, std::istream& is);
+	TurtleGroup(PlayState* game, Texture* texture, const Vector2D<float>& pos, const Vector2D<float>& vel);
+	TurtleGroup(PlayState* game, Texture* texture, std::istream& is);
 	void render() const override;
 	void update() override;
 	Collision checkCollision(SDL_FRect) override;

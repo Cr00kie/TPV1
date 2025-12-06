@@ -26,8 +26,8 @@ private:
     float m_fLiveTime;
 
 public:
-	Frog(GameState* game, Texture* texture, const Vector2D<float>& pos, int maxHealth = DEFAULT_MAX_HEALTH);
-	Frog(GameState* game, Texture* texture, std::istream& is, int maxHealth = DEFAULT_MAX_HEALTH);
+	Frog(PlayState* game, Texture* texture, const Vector2D<float>& pos, int maxHealth = DEFAULT_MAX_HEALTH);
+	Frog(PlayState* game, Texture* texture, std::istream& is, int maxHealth = DEFAULT_MAX_HEALTH);
 	void render() const override;
 	void update() override;
 	void checkFrogMoved();

@@ -4,14 +4,14 @@
 #include <cmath>
 #include <numbers>
 
-Frog::Frog(GameState* game, Texture* texture, const Vector2D<float>& pos, int maxHelath)
+Frog::Frog(PlayState* game, Texture* texture, const Vector2D<float>& pos, int maxHelath)
 	: SceneObject(game, texture, pos), m_StartPos(pos), 
 	  m_LastDir(0,0), m_nHealth(maxHelath),
 	  m_bMove(false), m_fAnimTime(0),
       m_fLiveTime(TIMER)
 {}
 
-Frog::Frog(GameState* game, Texture* texture, std::istream& is, int maxHealth)
+Frog::Frog(PlayState* game, Texture* texture, std::istream& is, int maxHealth)
 	: SceneObject(game, texture, is, texture->getFrameWidth() - COLLIDER_REDUCTION, texture->getFrameHeight() - COLLIDER_REDUCTION),
 	  m_LastDir(0,0), m_nHealth(maxHealth),
 	  m_bMove(false), m_fAnimTime(0),

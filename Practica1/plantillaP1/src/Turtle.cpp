@@ -7,12 +7,12 @@
 #include <string>
 using namespace std::string_literals;
 
-TurtleGroup::TurtleGroup(GameState* game, Texture* texture, const Vector2D<float>& pos, const Vector2D<float>& vel)
+TurtleGroup::TurtleGroup(PlayState* game, Texture* texture, const Vector2D<float>& pos, const Vector2D<float>& vel)
 	: Platform(game, texture, pos, vel, PlayState::BAST * 2 + SDLApplication::WINDOW_WIDTH), m_fnextFrameTimer(ANIM_PER), m_nCurrFrame(0), m_bDive(false)
 {
 }
 
-TurtleGroup::TurtleGroup(GameState* game, Texture* texture, std::istream& is)
+TurtleGroup::TurtleGroup(PlayState* game, Texture* texture, std::istream& is)
 	: Platform(game, texture, is, PlayState::BAST * 2 + SDLApplication::WINDOW_WIDTH), m_fnextFrameTimer(ANIM_PER), m_nCurrFrame(0)
 {
     is >> m_nGroupSize >> m_bDive;

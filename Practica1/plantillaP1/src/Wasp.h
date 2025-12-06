@@ -16,8 +16,8 @@ private:
     PlayState::Anchor m_PlayStateAnchor;
 
 public:
-	Wasp(GameState* game, Texture* texture, const Vector2D<float>& pos, const Vector2D<float>& vel, float tiempoVida);
-    Wasp(GameState* game, Texture* texture, std::istream& is);
+	Wasp(PlayState* game, Texture* texture, const Vector2D<float>& pos, const Vector2D<float>& vel, float tiempoVida);
+    Wasp(PlayState* game, Texture* texture, std::istream& is);
 	void update() override;
     void render() const override;
 	Collision checkCollision(SDL_FRect) override;

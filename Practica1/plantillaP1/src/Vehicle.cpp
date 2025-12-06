@@ -7,11 +7,11 @@
 
 using namespace std::string_literals;
 
-Vehicle::Vehicle(GameState* game, Texture* texture, const Vector2D<float>& pos, const Vector2D<float>& vel)
+Vehicle::Vehicle(PlayState* game, Texture* texture, const Vector2D<float>& pos, const Vector2D<float>& vel)
 	: Crosser(game, texture, pos, vel, PlayState::BAST +SDLApplication::WINDOW_WIDTH)
 {}
 
-Vehicle::Vehicle(GameState * game, Texture * texture, std::istream & is)
+Vehicle::Vehicle(PlayState* game, Texture * texture, std::istream & is)
 	: Crosser(game, texture, is, PlayState::BAST + SDLApplication::WINDOW_WIDTH + texture->getFrameWidth())
 {
 	int type;

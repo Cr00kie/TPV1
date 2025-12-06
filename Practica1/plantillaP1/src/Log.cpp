@@ -7,12 +7,12 @@
 
 using namespace std::string_literals;
 
-Log::Log(GameState* game, Texture* texture, const Vector2D<float>& pos, const Vector2D<float>& vel)
+Log::Log(PlayState* game, Texture* texture, const Vector2D<float>& pos, const Vector2D<float>& vel)
 	: Platform(game, texture, pos, vel, PlayState::BAST*2+SDLApplication::WINDOW_WIDTH)
 {
 }
 
-Log::Log(GameState* game, Texture* texture, std::istream& is)
+Log::Log(PlayState* game, Texture* texture, std::istream& is)
 	: Platform(game, texture, is, PlayState::BAST*2 + SDLApplication::WINDOW_WIDTH)
 {
 	int type;

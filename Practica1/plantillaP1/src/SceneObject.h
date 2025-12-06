@@ -19,8 +19,8 @@ protected:
     virtual SDL_FRect getBoundingBox() const;
 
 public:
-    SceneObject(GameState*, Texture*, Vector2D<float>, float = -1.f, float = -1.f);
-    SceneObject(GameState*, Texture*, std::istream&, float = -1.f, float = -1.f);
+    SceneObject(PlayState*, Texture*, Vector2D<float>, float = -1.f, float = -1.f);
+    SceneObject(PlayState*, Texture*, std::istream&, float = -1.f, float = -1.f);
     virtual ~SceneObject() = default;
     virtual Collision checkCollision(SDL_FRect other) = 0;
     void render() const override;
